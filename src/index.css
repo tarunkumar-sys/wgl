@@ -4,13 +4,33 @@
 @tailwind components;
 @tailwind utilities;
 
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 :root {
   font-family: "Poppins", sans-serif;
 }
 body{
 background-color: #052e16;
-
   color: #fff;
+  height: 100%;
+  width: 100%;
+}
+
+.no-cursor {
+  cursor: default !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* 👇 Offset for scroll to work nicely with sticky navbar */
+.scroll-offset {
+  scroll-margin-top: 4.5rem; /* Adjust based on your navbar height */
 }
 
 

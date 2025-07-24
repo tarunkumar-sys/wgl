@@ -3,19 +3,22 @@ import React, { useState, useEffect } from "react";
 
 const CustomCursor = ({ isActive }) => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [showCursor, setShowCursor] = useState(true);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
       setCursorPosition({ x: e.clientX, y: e.clientY });
+
+      // Check if the element or its parents have the 'no-cursor' class
+      const isOverNoCursor = e.target.closest(".no-cursor");
+      setShowCursor(!isOverNoCursor);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  if (!isActive) {
-    return null; // Hide the cursor when it's not active
-  }
+  if (!isActive || !showCursor) return null;
 
   return (
     <div
@@ -25,7 +28,7 @@ const CustomCursor = ({ isActive }) => {
         left: cursorPosition.x,
         width: "40px",
         height: "40px",
-        backgroundColor: "rgb(215, 255, 125, 1)",
+        backgroundColor: "rgba(215, 255, 125, 1)",
         borderRadius: "50%",
         pointerEvents: "none",
         transform: "translate(-50%, -50%)",

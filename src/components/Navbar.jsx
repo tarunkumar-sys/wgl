@@ -1,64 +1,94 @@
+// src/components/Navbar.jsx
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import logo from "../assets/logo.png";
+import { useNavigate, useLocation } from "react-router-dom";
+import logo from "../assets/logo.svg";
 import { navItems } from "../constants";
-
 
 
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const toggleNavbar = () => {
-    setMobileDrawerOpen(!mobileDrawerOpen);
+  const handleNavClick = (href) => {
+    setMobileDrawerOpen(false);
+
+    if (href.startsWith("#")) {
+      const id = href.slice(1);
+
+      if (location.pathname !== "/") {
+        navigate("/", { replace: true });
+        setTimeout(() => {
+          document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      } else {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      navigate(href);
+    }
   };
 
   return (
-    <nav className="sticky top-0 z-50 py-3 bg-green-800 backdrop-blur-lg border-b border-neutral-700/80">
-      <div className="container mx-auto px-4 relative lg:text-sm">
+    <nav className="sticky top-0 z-50 py-3 bg-green-800 text-white">
+      <div className="container mx-auto px-4 relative">
         <div className="flex justify-between items-center">
-          <div className="flex items-center flex-shrink-0">
-            <img className="h-10 w-10 mr-2" src={logo} alt="Logo" />
-            <span className="text-xl tracking-tight">World Green Line</span>
+          <div className="flex items-center">
+            <img src={logo} alt="Logo" className="h-10 w-10 mr-2 scale-[3]" />
+            {/* <span className="text-xl">World Green Line</span> */}
           </div>
-          <ul className="hidden lg:flex ml-14 space-x-5">
+
+          <ul className="hidden no-cursor lg:flex space-x-6">
             {navItems.map((item, index) => (
-              <li  key={index}> 
-                <a href={item.href}>{item.label}</a>
+              <li
+                key={index}
+                className="cursor-pointer hover:text-green-300 transition-all"
+                onClick={() => handleNavClick(item.href)}
+              >
+                {item.label}
               </li>
             ))}
-            <span class="absolute left-0 bottom-0 h-0.5 bg-blue-500 w-0 group-hover:w-full transition-all duration-300 ease-out"></span>
           </ul>
-          <div className="hidden lg:flex justify-center space-x-12 items-center">
-            <a
-              href="#"
-              className="bg-gradient-to-r from-green-500 to-green-800 py-2 px-3 rounded-md"
+
+          <div className="hidden lg:block">
+            <button
+              onClick={() => navigate("/donate")}
+              className="bg-green-600 hover:bg-green-700 py-2 px-4 rounded"
             >
               Donate Us
-            </a>
+            </button>
           </div>
-          <div className="lg:hidden md:flex flex-col justify-end">
-            <button onClick={toggleNavbar}>
+
+          <div className="lg:hidden">
+            <button onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}>
               {mobileDrawerOpen ? <X /> : <Menu />}
             </button>
           </div>
         </div>
+
         {mobileDrawerOpen && (
-          <div className="fixed right-0 z-20 bg-neutral-900 w-full p-12 flex flex-col justify-center items-center lg:hidden">
-            <ul>
+          <div className="lg:hidden mt-4">
+            <ul className="flex flex-col space-y-4">
               {navItems.map((item, index) => (
-                <li key={index} className="py-4">
-                  <a href={item.href}>{item.label}</a>
+                <li
+                  key={index}
+                  className="cursor-pointer text-center"
+                  onClick={() => handleNavClick(item.href)}
+                >
+                  {item.label}
                 </li>
               ))}
-            </ul>
-            <div className="flex space-x-6">
-              <a
-                href="#"
-                className="py-2 px-3 rounded-md bg-gradient-to-r from-green-500 to-green-800"
+              <button
+                onClick={() => {
+                  setMobileDrawerOpen(false);
+                  navigate("/donate");
+                }}
+                className="bg-green-600 mt-4 py-2 px-4 rounded"
               >
                 Donate Us
-              </a>
-            </div>
+              </button>
+            </ul>
           </div>
         )}
       </div>

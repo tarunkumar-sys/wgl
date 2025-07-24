@@ -30,7 +30,7 @@ const AboutSection = () => {
   ];
 
   return (
-    <section className="text-white px-4 sm:px-8 lg:px-12 py-12 bg-green-950">
+    <section className="text-white px-4 sm:px-16 py-16 bg-green-950">
       <div className="max-w-6xl mx-auto">
         {/* Title */}
         <div className="text-center mb-12">
@@ -38,7 +38,7 @@ const AboutSection = () => {
             About World Green Line
           </h2>
 
-          <div className="h-1 w-20 bg-lime-400 mx-auto mt-2 rounded-full" />
+          <div className="h-1 w-24 bg-lime-400 mx-auto mt-4 rounded-full" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

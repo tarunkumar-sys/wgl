@@ -1,12 +1,13 @@
 export const navItems = [
-  { label: "Home", href: "#" },
-  { label: "About Us", href: "#" },
-  { label: "Projects", href: "#" },
-  { label: "Impact", href: "#" },
-  { label: "Our Team", href: "#" },
-  { label: "Reviews", href: "#" },
-  { label: "Contact", href: "#" },
+  { label: "Home", href: "#home" },
+  { label: "About Us", href: "#about" },
+  { label: "Projects", href: "#projects" },
+  { label: "Impact", href: "#impact" },
+  { label: "Our Team", href: "#team" },
+  { label: "Reviews", href: "/reviews" },
+  { label: "Contact", href: "#contact" },
 ];
+
 
 export const resourcesLinks = [
   { href: "#", text: "Getting Started" },
