@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import { navItems } from "../constants";
 
-
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const navigate = useNavigate();
@@ -35,7 +34,11 @@ const Navbar = () => {
       <div className="container mx-auto px-4 relative">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <img src={logo} alt="Logo" className="h-10 w-10 mr-2 scale-[3]" />
+            <img
+              src={logo}
+              alt="Logo"
+              className="h-10 w-10  ml-6 sm:mr-2 scale-[3]"
+            />
             {/* <span className="text-xl">World Green Line</span> */}
           </div>
 
@@ -51,7 +54,7 @@ const Navbar = () => {
             ))}
           </ul>
 
-          <div className="hidden lg:block">
+          <div className="no-cursor hidden lg:block">
             <button
               onClick={() => navigate("/donate")}
               className="bg-green-600 hover:bg-green-700 py-2 px-4 rounded"
@@ -60,7 +63,7 @@ const Navbar = () => {
             </button>
           </div>
 
-          <div className="lg:hidden">
+          <div className="no-cursor lg:hidden">
             <button onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}>
               {mobileDrawerOpen ? <X /> : <Menu />}
             </button>
@@ -68,12 +71,12 @@ const Navbar = () => {
         </div>
 
         {mobileDrawerOpen && (
-          <div className="lg:hidden mt-4">
-            <ul className="flex flex-col space-y-4">
+          <div className="no-cursor lg:hidden mt-4">
+            <ul className="flex  flex-col space-y-4">
               {navItems.map((item, index) => (
                 <li
                   key={index}
-                  className="cursor-pointer text-center"
+                  className="cursor-pointer hover:text-lime-300 text-center"
                   onClick={() => handleNavClick(item.href)}
                 >
                   {item.label}
@@ -84,7 +87,7 @@ const Navbar = () => {
                   setMobileDrawerOpen(false);
                   navigate("/donate");
                 }}
-                className="bg-green-600 mt-4 py-2 px-4 rounded"
+                className="bg-green-600 hover:bg-green-700 mt-4 py-2 px-4 rounded"
               >
                 Donate Us
               </button>

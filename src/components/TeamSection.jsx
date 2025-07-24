@@ -119,16 +119,16 @@ const TeamSection = () => {
       <div className="relative max-w-5xl mx-auto">
         <button
           onClick={() => swiperRef.current?.slidePrev()}
-          className="absolute -left-16 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full no-cursor hover:bg-green-600 mr-8"
+          className="hidden sm:flex absolute -left-16 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full no-cursor hover:bg-green-600"
         >
           <ChevronLeft className="w-7 h-7 scale-[2] text-white" />
         </button>
 
         <button
           onClick={() => swiperRef.current?.slideNext()}
-          className="absolute  -right-16 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full no-cursor hover:bg-green-600"
+          className="hidden sm:flex absolute  -right-16 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full no-cursor hover:bg-green-600"
         >
-          <ChevronRight className="w-7 h-7 scale-[2] text-white" />
+          <ChevronRight className="w-6 h-6 scale-[2] text-white" />
         </button>
 
         <Swiper
@@ -144,19 +144,19 @@ const TeamSection = () => {
           breakpoints={{
             0: {
               slidesPerView: 1,
-              spaceBetween: 20,
+              spaceBetween: 0,
             },
             640: {
-              slidesPerView: 1.2,
-              spaceBetween: 30,
+              slidesPerView: 1.5,
+              spaceBetween: 10,
             },
             768: {
               slidesPerView: 2,
-              spaceBetween: 40,
+              spaceBetween: 20,
             },
             1024: {
               slidesPerView: 3,
-              spaceBetween: 60,
+              spaceBetween: 40,
             },
           }}
           coverflowEffect={{
@@ -171,9 +171,9 @@ const TeamSection = () => {
           {filteredTeam.map((member, index) => (
             <SwiperSlide
               key={index}
-              className="w-full sm:w-[310px] md:max-w-[280px] lg:max-w-[300px] xl:max-w-[320px]"
+              className="sm:w-[310px] md:max-w-[280px] lg:max-w-[300px] xl:max-w-[320px] flex justify-center"
             >
-              <div className="sm:h-[340px] min-h-[360px] bg-green-800 border border-green-400 rounded-2xl p-6 text-center shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              <div className="sm:h-[340px] w-[310px] min-h-[360px] bg-green-800 border border-green-400 rounded-2xl p-6 text-center shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                 <img
                   src={member.image}
                   alt={member.name}

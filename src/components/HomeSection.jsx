@@ -1,5 +1,5 @@
 // src/components/HomeSection.jsx
-import bgVideo from "../assets/video1.mp4";
+import bgVideo from "../assets/earth.mp4";
 import bgImage from "/images/img4.avif";
 
 const HomeSection = () => {
