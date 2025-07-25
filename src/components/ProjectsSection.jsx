@@ -34,7 +34,7 @@ const projects = [
     progress: 100,
     type: "water",
     img: "/images/img3.jpg",
-    bgColor: "forest",
+    bgColor: "bg-green-800",
   },
   {
     title: "Water Tank Construction",
@@ -45,7 +45,7 @@ const projects = [
     progress: 60,
     type: "infra",
     img: "/images/img2.jpg",
-    bgColor: "bg-cyan-900",
+    bgColor: "bg-green-800",
   },
   {
     title: "Solar Panel Installation",
@@ -56,7 +56,7 @@ const projects = [
     progress: 35,
     type: "infra",
     img: "/images/img4.avif",
-    bgColor: "bg-yellow-900",
+    bgColor: "bg-green-800",
   },
 ];
 
