@@ -1,4 +1,4 @@
-import bgVideo from "../assets/earth.mp4";
+import bgVideo from "../assets/earth3.mp4";
 import bgImage from "/images/img4.avif";
 
 const useVideo = true; // 👉 Change this to false to show image instead of video
