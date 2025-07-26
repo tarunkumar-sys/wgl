@@ -3,8 +3,9 @@ import { CheckCircle, Leaf, Droplets, Globe, Handshake } from "lucide-react";
 export default function ImpactSection() {
   return (
     <section className="bg-green-950 text-white py-16 px-4 sm:px-16 ">
+      <div className="max-w-6xl mx-auto">
       {/* Title Section */}
-      <div className="text-center mb-12">
+      <div className="text-center  mb-12">
         <h2 className="text-3xl text-lime-300 font-bold mb-2">Our Impact</h2>
         <p className="text-gray-300 max-w-xl mx-auto">
           Through our dedicated efforts and your support, we've made significant
@@ -117,6 +118,7 @@ export default function ImpactSection() {
               </div>
             </div>
           ))}
+        </div>
         </div>
       </div>
     </section>

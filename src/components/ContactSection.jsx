@@ -30,7 +30,7 @@ const ContactSection = () => {
       id="contact"
       className="bg-green-950 no-cursor text-white px-4 sm:px-16 py-16"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
         <h2 className="text-4xl font-bold text-lime-400">
           Get in Touch

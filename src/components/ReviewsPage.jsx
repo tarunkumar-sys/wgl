@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import ReviewHighlight from "./ReviewHighlight";
 
 const data = [
   {
@@ -84,17 +85,25 @@ const ReviewsPage = () => {
   const swiperRef = useRef(null);
 
   return (
-    <div
-      className="relative py-12 bg-green-950 min-h-screen text-white"
-      style={{
-        maskImage:
-          "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
-        WebkitMaskImage:
-          "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
-      }}
-    >
-      <div className="px-16 flex justify-between items-center mb-6">
-        <h1 className="text-3xl  font-bold">Reviews</h1>
+    <>
+        {/* === Top Heading Section with BG image === */}
+      <div className="relative h-72 md:h-80 flex items-center justify-center text-center text-white">
+        <img
+          src="public\images\rew.jpg"
+          alt="Header Background"
+          className="absolute inset-0 w-full h-full object-cover object-top opacity-40"
+        />
+        <div className="relative z-10 px-4">
+          <h2 className="text-4xl md:text-5xl font-bold leading-snug">
+            Discover What{" "}
+            <span className="text-yellow-400">People Say</span> About Us
+          </h2>
+        </div>
+      </div>
+     {/* <ReviewHighlight /> */}
+    <div className="py-12 bg-green-950 min-h-screen align-centerd text-white">
+      <div className="px-16 flex justify-between items-center">
+        <h1 className="text-3xl  font-bold">Video Reviews</h1>
         <div className="flex gap-2">
           <button
             onClick={() => swiperRef.current?.slidePrev()}
@@ -110,20 +119,28 @@ const ReviewsPage = () => {
           </button>
         </div>
       </div>
+<div className="pt-8"
+ style={{
+        maskImage:
+          "linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)",
+        WebkitMaskImage:
+          "linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)",
+      }}
+>
 
-      <Swiper
-        modules={[Autoplay]}
-        onSwiper={(swiper) => (swiperRef.current = swiper)}
-        spaceBetween={-40}
-        centeredSlides={true}
-        slidesPerView={4}
-        loop={true}
-        speed={800}
-        autoplay={{ delay: 3000, disableOnInteraction: false }}
-        className="pb-10"
-      >
+<Swiper
+  modules={[Autoplay]}
+  onSwiper={(swiper) => (swiperRef.current = swiper)}
+  loop={true}
+  speed={800}
+  autoplay={{ delay: 3000, disableOnInteraction: false }}
+  spaceBetween={20}
+  slidesPerView={"auto"}
+  centeredSlides={false}
+  className="pb-10"
+>
         {data.map((item, i) => (
-          <SwiperSlide key={i} className="flex justify-center">
+          <SwiperSlide key={i} className="!w-[300px] flex justify-center">
             <div className="rounded-3xl overflow-hidden w-[280px] h-[360px] relative bg-zinc-800 shadow-xl">
               {item.type === "img" ? (
                 <img
@@ -159,7 +176,9 @@ const ReviewsPage = () => {
           </SwiperSlide>
         ))}
       </Swiper>
+      </div>
     </div>
+    </>
   );
 };
 

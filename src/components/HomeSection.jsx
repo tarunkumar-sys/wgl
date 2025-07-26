@@ -1,9 +1,12 @@
 import bgVideo from "../assets/earth.mp4";
 import bgImage from "/images/img4.avif";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const useVideo = true; // 👉 Change this to false to show image instead of video
 
 const HomeSection = () => {
+  const navigate = useNavigate(); // ✅ missing before
+
   return (
     <section id="home" className="w-full h-screen relative overflow-hidden">
       
@@ -25,20 +28,35 @@ const HomeSection = () => {
         />
       )}
 
-      {/* Overlay (optional) */}
+      {/* Overlay */}
       <div className="absolute inset-0 bg-black/40 z-10" />
 
       {/* Content */}
-      <div className="relative z-20 h-full flex flex-col justify-center items-center text-center text-white px-4">
+      <div className="relative z-20 h-full flex flex-col justify-center items-start text-left text-white px-6 md:px-32">
         <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
           Welcome to World Green Line
         </h1>
         <p className="text-lg md:text-xl max-w-2xl drop-shadow-md">
           Empowering sustainability through green innovations. Join us in shaping a better future.
         </p>
-        <button className="mt-8 px-6 py-3 rounded-md bg-green-600 hover:bg-green-700 transition">
-          Explore Our Projects
-        </button>
+        
+        <div className="no-cursor mt-6 flex gap-4">
+          <button
+            onClick={() => {
+              const section = document.getElementById("projects");
+              section?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="bg-green-600  font-semibold hover:bg-green-700 py-4 px-5 rounded-3xl transition"
+          >
+            Explore Our Projects
+          </button>
+            <button
+            onClick={() => navigate("/donate")}
+            className="bg-green-600 font-semibold hover:bg-green-700 py-4 px-5 rounded-3xl transition"
+          >
+            Donate Us
+          </button>
+        </div>
       </div>
     </section>
   );

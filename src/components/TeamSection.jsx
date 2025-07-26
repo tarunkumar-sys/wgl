@@ -93,7 +93,7 @@ const TeamSection = () => {
 
   return (
     <section className="bg-green-950 text-lime-300 py-16 px-4 sm:px-16">
-      <div className="text-center">
+      <div className="text-center max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold mb-2">Our Team</h2>
         <p className="text-base text-gray-300 max-w-xl mx-auto">
           Meet the dedicated professionals working tirelessly to make our

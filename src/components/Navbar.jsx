@@ -30,9 +30,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 py-3 bg-green-800 text-white">
+    <nav className="sticky no-cursor top-0 z-50 py-3 bg-green-800 text-white">
       <div className="container mx-auto px-4 relative">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between sm:px-16 items-center">
           <div className="flex items-center">
             <img
               src={logo}
@@ -42,26 +42,17 @@ const Navbar = () => {
             {/* <span className="text-xl">World Green Line</span> */}
           </div>
 
-          <ul className="hidden no-cursor lg:flex space-x-6">
+          <ul className="hidden lg:flex space-x-6">
             {navItems.map((item, index) => (
               <li
-                key={index}
-                className="cursor-pointer hover:text-green-300 transition-all"
+                key={index} // change remove text size if it is too big
+                className="cursor-pointer sm:text-xl hover:text-green-300 transition-all"
                 onClick={() => handleNavClick(item.href)}
               >
                 {item.label}
               </li>
             ))}
           </ul>
-
-          <div className="no-cursor hidden lg:block">
-            <button
-              onClick={() => navigate("/donate")}
-              className="bg-green-600 hover:bg-green-700 py-2 px-4 rounded"
-            >
-              Donate Us
-            </button>
-          </div>
 
           <div className="no-cursor lg:hidden">
             <button onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}>
@@ -82,7 +73,7 @@ const Navbar = () => {
                   {item.label}
                 </li>
               ))}
-              <button
+              {/* <button
                 onClick={() => {
                   setMobileDrawerOpen(false);
                   navigate("/donate");
@@ -90,7 +81,7 @@ const Navbar = () => {
                 className="bg-green-600 hover:bg-green-700 mt-4 py-2 px-4 rounded"
               >
                 Donate Us
-              </button>
+              </button> */}
             </ul>
           </div>
         )}
