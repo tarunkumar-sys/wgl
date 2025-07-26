@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import ReviewHighlight from "./ReviewHighlight";
+import HeaderBg from "/images/HeaderBg.jpg";
 
 const data = [
   {
@@ -89,7 +89,7 @@ const ReviewsPage = () => {
         {/* === Top Heading Section with BG image === */}
       <div className="relative h-72 md:h-80 flex items-center justify-center text-center text-white">
         <img
-          src="public\images\rew.jpg"
+          src={HeaderBg}
           alt="Header Background"
           className="absolute inset-0 w-full h-full object-cover object-top opacity-40"
         />

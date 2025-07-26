@@ -1,6 +1,6 @@
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { resourcesLinks, platformLinks, communityLinks } from "../constants";
-import logo from "../assets/logo.svg";
+import logo from "/images/logo.svg";
 
 const Footer = () => {
   return (
@@ -10,7 +10,7 @@ const Footer = () => {
         {/* Logo + About */}
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <img src="src\assets\logo.svg" alt="logo" className="w-18 h-8 scale-[1.5]" />
+            <img src={logo} alt="logo" className="w-18 h-8 scale-[1.5]" />
           </div>
           <p className="text-gray-400 text-sm leading-relaxed mb-4">
             Making sustainability smarter with AI. Clean, green, and connected — that’s our mission.

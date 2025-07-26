@@ -2,7 +2,7 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import logo from "../assets/logo.svg";
+import logo from "/images/logo.svg";
 import { navItems } from "../constants";
 
 const Navbar = () => {
