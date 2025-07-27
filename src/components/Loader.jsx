@@ -14,7 +14,7 @@ export default function Loader() {
 
       // Re-enable scroll
       body.style.overflow = "auto";
-    }, 4200);
+    }, 2300);
 
     return () => clearTimeout(timer);
   }, []);
@@ -24,7 +24,7 @@ export default function Loader() {
       <div id="loader">
         <h1 className="delay1">Clean Today, Live Tomorrow</h1>
         <h1 className="delay2">Protect Wildlife, Preserve Life</h1>
-        <h1 className="delay3">Heal the Earth Now</h1>
+        
       </div>
 
       <style>{`
@@ -71,7 +71,7 @@ export default function Loader() {
 
         #loader h1.delay1 { animation-delay: 1s; }
         #loader h1.delay2 { animation-delay: 2s; }
-        #loader h1.delay3 { animation-delay: 3s; }
+       
 
         @media (max-width: 600px) {
           #loader h1 {

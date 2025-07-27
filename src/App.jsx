@@ -13,6 +13,8 @@ import DonatePage from "./components/DonatePage"; // Create this page
 import HomeSection from "./components/HomeSection"; // Create this section
 import ScrollToTop from "./components/ScrollToTop";
 import ContactSection from "./components/ContactSection";
+import Admin from "./components/Admin";
+
 
 const HomePage = () => (
   <div className="mx-auto">
@@ -47,6 +49,9 @@ const App = () => (
       <Route path="/" element={<HomePage />} />
       <Route path="/reviews" element={<ReviewsPage />} />
       <Route path="/donate" element={<DonatePage />} />
+      <Route path="/Admin" element={<Admin />} />
+
+
     </Routes>
     <Footer />
   </Router>
