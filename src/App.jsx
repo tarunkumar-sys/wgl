@@ -14,11 +14,13 @@ import HomeSection from "./components/HomeSection"; // Create this section
 import ScrollToTop from "./components/ScrollToTop";
 import ContactSection from "./components/ContactSection";
 import Admin from "./components/Admin";
+import Featuredproject from "./components/Featuredproject";
+
 
 
 const HomePage = () => (
   <div className="mx-auto">
-    <CustomCursor isActive={true} />
+    
     <section id="home">
       <HomeSection />
     </section>
@@ -28,6 +30,9 @@ const HomePage = () => (
     <section id="projects">
       <ProjectsSection />
     </section>
+    
+     <Featuredproject/>
+    
     <section id="impact">
       <ImpactSection />
     </section>

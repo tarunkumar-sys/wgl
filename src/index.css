@@ -4,6 +4,37 @@
 @tailwind components;
 @tailwind utilities;
 
+
+ @keyframes slideInRight {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+        @keyframes slideInLeft {
+          from { transform: translateX(-100%); }
+          to { transform: translateX(0); }
+        }
+        .animate-slideInRight {
+          animation: slideInRight 0.7s ease-in-out;
+        }
+        .animate-slideInLeft {
+          animation: slideInLeft 0.7s ease-in-out;
+        }
+
+@keyframes fade-in-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.8s ease-out forwards;
+}
+
 *{
   margin: 0;
   padding: 0;

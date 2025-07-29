@@ -1084,52 +1084,7 @@ const ProjectsSection = () => {
           )}
         </ErrorBoundary>
 
-        <div className="grid md:grid-cols-2 gap-6 bg-[#09513A] p-6 sm:p-10 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
-          <div>
-            <div className="flex items-center mb-4">
-              <Star className="text-lime-400 w-5 h-5 mr-2" />
-              <h3 className="text-lg font-semibold text-lime-300">
-                Featured Project
-              </h3>
-            </div>
-            <h4 className="text-xl font-bold mb-3">
-              ONGC Partnership: Green Schools Initiative
-            </h4>
-            <p className="text-sm text-gray-300 mb-4">
-              Our flagship collaboration with ONGC has enabled us to transform
-              rural schools into green hubs with sustainable practices,
-              environmental education, and improved infrastructure.
-            </p>
-            <ul className="text-sm space-y-2 text-gray-200">
-              {[
-                "1,000 trees planted across 10 schools",
-                "Environmental education for 2,500+ students",
-                "Clean water access for entire communities",
-              ].map((item, idx) => (
-                <li key={idx} className="flex items-start transition-colors duration-200 hover:text-white">
-                  <CheckCircle className="w-4 h-4 text-lime-400 mr-2 mt-1" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-lg font-bold mb-4">Project Timeline</h4>
-            <ul className="space-y-4 text-sm">
-              {timeline.map((item, idx) => (
-                <li key={idx} className="flex gap-3 items-start transition-colors duration-200 hover:text-white">
-                  <Clock className={`w-5 h-5 mt-1 ${item.color}`} />
-                  <div>
-                    <p className="font-semibold text-white">{item.title}</p>
-                    <p className="text-gray-300">{item.description}</p>
-                    <p className="text-xs text-gray-400 mt-1">{item.date}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        
       </div>
     </section>
   );
