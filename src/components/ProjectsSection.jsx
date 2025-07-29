@@ -590,7 +590,7 @@ const AddProjectPopup = ({ onClose, onAddProject }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto transition-all duration-300">
+      <div className="bg-gray-700 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto transition-all duration-300">
         <div className="flex justify-between items-center p-4 border-b border-gray-700">
           <h3 className="text-2xl font-bold text-lime-300">Add New Project</h3>
           <button

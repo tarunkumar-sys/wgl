@@ -4,7 +4,7 @@ import logo from "/images/logo.svg";
 
 const Footer = () => {
   return (
-    <footer className="no-cursor bg-green-950 text-white pt-12 px-4 sm:px-16 border-t border-lime-500">
+    <footer className="no-cursor text-white pt-12 px-4 sm:px-16 border-t border-lime-500">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
         {/* Logo + About */}

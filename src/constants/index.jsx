@@ -4,8 +4,8 @@ export const navItems = [
   { label: "Projects", href: "#projects" },
   { label: "Impact", href: "#impact" },
   { label: "Our Team", href: "#team" },
+  { label: "Reviews", href: "#reviews" },
   { label: "Contact", href: "#contact" },
-  { label: "Reviews", href: "/reviews" },
 ];
 
 
