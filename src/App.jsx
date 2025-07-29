@@ -39,6 +39,9 @@ const HomePage = () => (
     <section id="team">
       <TeamSection />
     </section>
+    <section id="Reviews">
+      <ReviewsPage />
+    </section>
     <section id="contact">
       <ContactSection />
     </section>
@@ -52,7 +55,7 @@ const App = () => (
     <Navbar />
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/reviews" element={<ReviewsPage />} />
+      {/* <Route path="/reviews" element={<ReviewsPage />} /> */}
       <Route path="/donate" element={<DonatePage />} />
       <Route path="/Admin" element={<Admin />} />
 
