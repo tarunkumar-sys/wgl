@@ -128,7 +128,7 @@ const TeamSection = () => {
           onClick={() => swiperRef.current?.slideNext()}
           className="hidden sm:flex absolute  -right-16 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full no-cursor hover:bg-green-600"
         >
-          <ChevronRight className="w-6 h-6 scale-[2] text-white" />
+          <ChevronRight className="w-7 h-7 scale-[2] text-white" />
         </button>
 
         <Swiper

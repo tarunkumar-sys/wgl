@@ -2,11 +2,19 @@ export const navItems = [
   { label: "Home", href: "#home" },
   { label: "About Us", href: "#about" },
   { label: "Projects", href: "#projects" },
-  { label: "Impact", href: "#impact" },
+  { 
+    label: "Impact", 
+    href: "#impact",
+    subMenu: [
+      { label: "Our Impact", href: "#impact" },
+      { label: "Blogs", href: "/blogs" },
+    ],
+  },
   { label: "Our Team", href: "#team" },
   { label: "Reviews", href: "#reviews" },
   { label: "Contact", href: "#contact" },
 ];
+
 
 
 export const resourcesLinks = [
