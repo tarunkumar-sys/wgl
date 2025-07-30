@@ -12,7 +12,7 @@ import {
   Sliders,
   Grid,
 } from "lucide-react";
-import { openDB } from 'idb';
+import { openDB } from "idb";
 
 const typeColors = {
   forest: "bg-lime-400",
@@ -111,19 +111,19 @@ const timeline = [
 
 // Image Storage Utilities
 const saveImageToStorage = async (imageData) => {
-  if (!imageData.startsWith('data:image')) {
+  if (!imageData.startsWith("data:image")) {
     return imageData; // Already a URL, no need to store
   }
 
   try {
-    const db = await openDB('ProjectImagesDB', 1, {
+    const db = await openDB("ProjectImagesDB", 1, {
       upgrade(db) {
-        db.createObjectStore('images');
+        db.createObjectStore("images");
       },
     });
-    
+
     const id = Date.now().toString();
-    await db.put('images', imageData, id);
+    await db.put("images", imageData, id);
     return `indexeddb:${id}`;
   } catch (error) {
     console.error("Error saving image:", error);
@@ -132,36 +132,36 @@ const saveImageToStorage = async (imageData) => {
 };
 
 const getImageFromStorage = async (imageRef) => {
-  if (!imageRef.startsWith('indexeddb:')) {
+  if (!imageRef.startsWith("indexeddb:")) {
     return imageRef;
   }
 
   try {
-    const id = imageRef.replace('indexeddb:', '');
-    const db = await openDB('ProjectImagesDB');
-    return await db.get('images', id);
+    const id = imageRef.replace("indexeddb:", "");
+    const db = await openDB("ProjectImagesDB");
+    return await db.get("images", id);
   } catch (error) {
     console.error("Error loading image:", error);
-    return '';
+    return "";
   }
 };
 
 // Project Image Component
 const ProjectImage = ({ src, alt, className }) => {
-  const [imageSrc, setImageSrc] = useState('');
+  const [imageSrc, setImageSrc] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadImage = async () => {
       try {
         setLoading(true);
-        const img = src.startsWith('indexeddb:') 
+        const img = src.startsWith("indexeddb:")
           ? await getImageFromStorage(src)
           : src;
-        setImageSrc(img || '');
+        setImageSrc(img || "");
       } catch (error) {
         console.error("Error loading image:", error);
-        setImageSrc('');
+        setImageSrc("");
       } finally {
         setLoading(false);
       }
@@ -171,7 +171,9 @@ const ProjectImage = ({ src, alt, className }) => {
 
   if (loading) {
     return (
-      <div className={`bg-gray-700 flex items-center justify-center ${className}`}>
+      <div
+        className={`bg-gray-700 flex items-center justify-center ${className}`}
+      >
         <span className="text-gray-400">Loading image...</span>
       </div>
     );
@@ -180,7 +182,9 @@ const ProjectImage = ({ src, alt, className }) => {
   return imageSrc ? (
     <img src={imageSrc} alt={alt} className={className} />
   ) : (
-    <div className={`bg-gray-700 flex items-center justify-center ${className}`}>
+    <div
+      className={`bg-gray-700 flex items-center justify-center ${className}`}
+    >
       <span className="text-gray-400">Image not available</span>
     </div>
   );
@@ -205,7 +209,9 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div className="p-4 bg-red-100 text-red-800 rounded-lg my-4">
-          <h3 className="font-bold">Something went wrong with project storage</h3>
+          <h3 className="font-bold">
+            Something went wrong with project storage
+          </h3>
           <p>Try refreshing the page or clearing your browser data</p>
         </div>
       );
@@ -605,7 +611,9 @@ const AddProjectPopup = ({ onClose, onAddProject }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Title*</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Title*
+                </label>
                 <input
                   type="text"
                   name="title"
@@ -616,7 +624,9 @@ const AddProjectPopup = ({ onClose, onAddProject }) => {
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Status</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Status
+                </label>
                 <select
                   name="status"
                   value={newProject.status}
@@ -748,7 +758,7 @@ const AllProjectsPopup = ({ projects, onClose, onProjectClick }) => {
             <X className="w-6 h-6" />
           </button>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
             {projects.map((p, i) => (
@@ -784,7 +794,7 @@ const AllProjectsPopup = ({ projects, onClose, onProjectClick }) => {
                     <div className="w-full bg-gray-700 h-2 rounded-full mt-1 overflow-hidden">
                       <div
                         className={`h-2 rounded-full ${
-                          typeColors[p.type] || 'bg-gray-500'
+                          typeColors[p.type] || "bg-gray-500"
                         } transition-all duration-700 ease-in-out`}
                         style={{ width: `${p.progress}%` }}
                       />
@@ -807,7 +817,7 @@ const ProjectsSection = () => {
   const [showAddProject, setShowAddProject] = useState(false);
   const [projectsData, setProjectsData] = useState(() => {
     try {
-      const savedProjects = localStorage.getItem('projectsData');
+      const savedProjects = localStorage.getItem("projectsData");
       return savedProjects ? JSON.parse(savedProjects) : initialProjects;
     } catch (error) {
       console.error("Error loading projects from localStorage:", error);
@@ -822,18 +832,20 @@ const ProjectsSection = () => {
     const saveProjectsData = async () => {
       try {
         // Only save text data to localStorage, not images
-        const projectsToSave = projectsData.map(project => ({
+        const projectsToSave = projectsData.map((project) => ({
           ...project,
           // Don't save base64 images to localStorage
-          img: project.img.startsWith('data:image') ? '' : project.img,
-          images: project.images.map(img => 
-            img.startsWith('data:image') ? '' : img
-          )
+          img: project.img.startsWith("data:image") ? "" : project.img,
+          images: project.images.map((img) =>
+            img.startsWith("data:image") ? "" : img
+          ),
         }));
-        localStorage.setItem('projectsData', JSON.stringify(projectsToSave));
+        localStorage.setItem("projectsData", JSON.stringify(projectsToSave));
       } catch (error) {
         console.error("Error saving projects to localStorage:", error);
-        setStorageError("Failed to save projects. Your changes might not persist.");
+        setStorageError(
+          "Failed to save projects. Your changes might not persist."
+        );
         setTimeout(() => setStorageError(null), 5000);
       }
     };
@@ -844,10 +856,10 @@ const ProjectsSection = () => {
   const animateScroll = (direction) => {
     if (isAnimating) return;
     setIsAnimating(true);
-    
+
     const transitionTime = 300;
-    
-    if (direction === 'next') {
+
+    if (direction === "next") {
       setStart((s) => (s + 1) % projectsData.length);
     } else {
       setStart((s) => (s - 1 + projectsData.length) % projectsData.length);
@@ -856,8 +868,8 @@ const ProjectsSection = () => {
     setTimeout(() => setIsAnimating(false), transitionTime);
   };
 
-  const next = () => animateScroll('next');
-  const prev = () => animateScroll('prev');
+  const next = () => animateScroll("next");
+  const prev = () => animateScroll("prev");
 
   const getVisibleProjects = () => {
     const result = [];
@@ -877,7 +889,7 @@ const ProjectsSection = () => {
 
   const handleDeleteImages = (imagesToDelete) => {
     if (!selectedProject) return;
-    
+
     setProjectsData((prev) =>
       prev.map((project) =>
         project.title === selectedProject.title
@@ -894,16 +906,16 @@ const ProjectsSection = () => {
 
   const handleAddImages = async (newImages) => {
     if (!selectedProject) return;
-    
+
     const storedImages = await Promise.all(
       newImages.map(async (img) => {
-        if (img.startsWith('data:image')) {
+        if (img.startsWith("data:image")) {
           return await saveImageToStorage(img);
         }
         return img;
       })
     );
-    
+
     setProjectsData((prev) =>
       prev.map((project) =>
         project.title === selectedProject.title
@@ -931,16 +943,16 @@ const ProjectsSection = () => {
     // Store images in IndexedDB
     const storedImg = await saveImageToStorage(newProject.img);
     const storedImages = await Promise.all(
-      newProject.images.map(img => saveImageToStorage(img))
+      newProject.images.map((img) => saveImageToStorage(img))
     );
-    
+
     setProjectsData((prev) => [
       ...prev,
       {
         ...newProject,
         img: storedImg,
-        images: storedImages
-      }
+        images: storedImages,
+      },
     ]);
     setShowAddProject(false);
   };
@@ -954,34 +966,32 @@ const ProjectsSection = () => {
   };
 
   return (
-    <section className="text-white px-4 sm:px-16 py-16">
+    <section className="text-whit px-4 sm:px-16 py-16 relative">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <div className="flex justify-between items-center">
-            <button
-              onClick={() => setShowAllProjectsPopup(true)}
-              className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
-            >
-              <Grid className="w-5 h-5 mr-1" />
-              View All Projects
-            </button>
-            <div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-lime-300">
-                Our Projects
-              </h2>
-              <p className="text-gray-300 mt-2 max-w-xl mx-auto">
-                Discover our ongoing initiatives to restore and protect our
-                environment through sustainable practices and community
-                engagement.
-              </p>
+          {/* Container with relative positioning */}
+          <div className="relative max-w-5xl mx-auto">
+            {/* Centered heading */}
+            <h2 className="text-3xl sm:text-4xl font-bold text-lime-300 text-center">
+              Our Projects
+            </h2>
+
+            {/* Button positioned at top right */}
+            <div className="absolute -mr-10 right-0 top-1/2 -translate-y-1/2">
+              <button
+                onClick={() => setShowAddProject(true)}
+                className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200"
+              >
+                <Plus className="w-5 h-5 mr-1" />
+                Add Project
+              </button>
             </div>
-            <button
-              onClick={() => setShowAddProject(true)}
-              className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200"
-            >
-              <Plus className="w-5 h-5 mr-1" />
-              Add Project
-            </button>
+            {/* Paragraph centered below */}
+            <p className="text-gray-300 mt-2 max-w-xl mx-auto text-center">
+              Discover our ongoing initiatives to restore and protect our
+              environment through sustainable practices and community
+              engagement.
+            </p>
           </div>
           <div className="h-1 w-24 bg-lime-400 mx-auto mt-4 rounded-full" />
         </div>
@@ -1000,7 +1010,11 @@ const ProjectsSection = () => {
             <ChevronLeft className="text-white w-5 h-5" />
           </button>
 
-          <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 px-4 sm:px-6 transition-opacity duration-300 ${isAnimating ? 'opacity-70' : 'opacity-100'}`}>
+          <div
+            className={`grid grid-cols-1 md:grid-cols-3 gap-6 px-4 sm:px-6 transition-opacity duration-300 ${
+              isAnimating ? "opacity-70" : "opacity-100"
+            }`}
+          >
             {getVisibleProjects().map((p, i) => (
               <div
                 key={i}
@@ -1034,7 +1048,7 @@ const ProjectsSection = () => {
                     <div className="w-full bg-gray-700 h-2 rounded-full mt-1 overflow-hidden">
                       <div
                         className={`h-2 rounded-full ${
-                          typeColors[p.type] || 'bg-gray-500'
+                          typeColors[p.type] || "bg-gray-500"
                         } transition-all duration-500 ease-out`}
                         style={{ width: `${p.progress}%` }}
                       />
@@ -1043,6 +1057,14 @@ const ProjectsSection = () => {
                 </div>
               </div>
             ))}
+            {/* Floating button only inside Projects section */}
+            <button
+              onClick={() => setShowAllProjectsPopup(true)}
+              className="hidden md:flex items-center px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-colors duration-200 z-20 absolute right-4 -bottom-16"
+              style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.18)" }}
+            >
+              View All Projects
+            </button>
           </div>
 
           <button
@@ -1083,8 +1105,6 @@ const ProjectsSection = () => {
             />
           )}
         </ErrorBoundary>
-
-        
       </div>
     </section>
   );

@@ -83,7 +83,7 @@ const DonatePage = () => {
   ];
 
   return (
-    <div className="min-h-screen p-6 sm:p-10 bg-[#0e1d13] font-sans">
+    <div className="min-h-screen p-6 sm:p-10 font-sans">
       <div className="max-w-5xl mx-auto">
         <div className="mb-10 text-center">
           <h1 className="text-5xl font-extrabold  tracking-tight">
