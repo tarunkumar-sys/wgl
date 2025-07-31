@@ -2,6 +2,12 @@
 import bgImage from "/images/img4.avif";
 
 import riverraft2 from "../assets/riverraft2.mp4"
+// import bgVideo from "../assets/earth.mp4";
+// import waves from "../assets/waves.mp4"
+// import forest from "../assets/forest.mp4"
+// import earth2 from "../assets/earth2.mp4"
+// import banaras from "../assets/banaras.mp4"
+
 
 
 
