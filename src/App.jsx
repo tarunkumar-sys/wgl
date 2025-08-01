@@ -1,9 +1,15 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Loader from "./components/Loader";
 import AboutSection from "./components/AboutSection";
 import ProjectsSection from "./components/ProjectsSection";
+import ProjectAdmin from "./components/ProjectAdmin";
 import ImpactSection from "./components/ImpactSection";
 import TeamSection from "./components/TeamSection";
 import ReviewsPage from "./components/ReviewsPage";
@@ -16,18 +22,32 @@ import Featuredproject from "./components/Featuredproject";
 import BlogsPage from "./pages/BlogsPage";
 import SingleBlogPage from "./pages/SingleBlogPage";
 import AdminPage from "./pages/AdminPage";
-import Myblogs from "./components/myblogs"
+import Myblogs from "./components/myblogs";
 
 const HomePage = () => (
   <div className="mx-auto">
-    <section id="home"><HomeSection /></section>
-    <section id="about"><AboutSection /></section>
-    <section id="projects"><ProjectsSection /></section>
+    <section id="home">
+      <HomeSection />
+    </section>
+    <section id="about">
+      <AboutSection />
+    </section>
+    <section id="projects">
+      <ProjectsSection />
+    </section>
     <Featuredproject />
-    <section id="impact"><ImpactSection /></section>
-    <section id="team"><TeamSection /></section>
-    <section id="Reviews"><ReviewsPage /></section>
-    <section id="contact"><ContactSection /></section>
+    <section id="impact">
+      <ImpactSection />
+    </section>
+    <section id="team">
+      <TeamSection />
+    </section>
+    <section id="Reviews">
+      <ReviewsPage />
+    </section>
+    <section id="contact">
+      <ContactSection />
+    </section>
   </div>
 );
 
@@ -58,6 +78,7 @@ const App = () => (
         <Route path="/blogs/:id" element={<SingleBlogPage />} />
         <Route path="/bgadmin" element={<AdminPage />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="admin/projects" element={<ProjectAdmin />} />
       </Routes>
     </Layout>
   </Router>

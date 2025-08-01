@@ -1,24 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
- @keyframes slideInRight {
-          from { transform: translateX(100%); }
-          to { transform: translateX(0); }
-        }
-        @keyframes slideInLeft {
-          from { transform: translateX(-100%); }
-          to { transform: translateX(0); }
-        }
-        .animate-slideInRight {
-          animation: slideInRight 0.7s ease-in-out;
-        }
-        .animate-slideInLeft {
-          animation: slideInLeft 0.7s ease-in-out;
-        }
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.animate-slideInRight {
+  animation: slideInRight 0.7s ease-in-out;
+}
+.animate-slideInLeft {
+  animation: slideInLeft 0.7s ease-in-out;
+}
 
 @keyframes fade-in-down {
   0% {
@@ -35,7 +42,7 @@
   animation: fade-in-down 0.8s ease-out forwards;
 }
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -67,7 +74,7 @@ body {
     hsl(168deg 69% 9%) 91%,
     hsl(168deg 71% 8%) 100%
   );
-    /* hsl(64deg 86% 54%) 0%,
+  /* hsl(64deg 86% 54%) 0%,
     hsl(78deg 68% 55%) 9%,
     hsl(98deg 49% 53%) 18%,
     hsl(126deg 37% 48%) 27%,
@@ -85,7 +92,6 @@ body {
   background-size: cover;
 }
 
-
 .no-cursor {
   cursor: default !important;
 }
@@ -94,14 +100,24 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ✅ Hidden Scroll (scroll works but hidden) */
+.hidden-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.hidden-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* 👇 Offset for scroll to work nicely with sticky navbar */
 .scroll-offset {
   scroll-margin-top: 4.5rem; /* Adjust based on your navbar height */
 }
 
 .cardEffect {
-    backdrop-filter: blur(16px) saturate(200%);
-    -webkit-backdrop-filter: blur(16px) saturate(200%);
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(4, 255, 0, 0.125);
+  backdrop-filter: blur(16px) saturate(200%);
+  -webkit-backdrop-filter: blur(16px) saturate(200%);
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(4, 255, 0, 0.125);
 }
