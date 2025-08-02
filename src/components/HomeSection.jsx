@@ -58,16 +58,23 @@ const HomeSection = () => {
               const section = document.getElementById("projects");
               section?.scrollIntoView({ behavior: "smooth" });
             }}
-            className="bg-green-600  font-semibold hover:bg-green-700 py-4 px-5 rounded-3xl transition"
-          >
-            Explore Our Projects
-          </button>
-            <button
-            onClick={() => navigate("/donate")}
-            className="bg-green-600 font-semibold hover:bg-green-700 py-4 px-5 rounded-3xl transition"
-          >
-            Donate Us
-          </button>
+className="relative inline-block group font-semibold px-6 py-4 rounded-3xl border border-green-700 bg-gradient-to-r from-green-600 to-green-700 shadow-lg overflow-hidden">
+    <span className="relative z-10 text-white tracking-wide transition-colors duration-300 group-hover:text-green-800">
+      Explore Our Projects
+    </span>
+    <span className="absolute inset-0 bg-white translate-y-full rounded-full transition-all duration-500 group-hover:translate-y-0 group-hover:rounded-none z-0" />
+  </button>
+
+  {/* Donate Us Button */}
+  <button
+    onClick={() => navigate("/donate")}
+    className="relative inline-block group font-semibold px-6 py-4 rounded-3xl border border-green-700 bg-gradient-to-r from-green-500 to-green-600 shadow-lg overflow-hidden"
+  >
+    <span className="relative z-10 text-white tracking-wide transition-colors duration-300 group-hover:text-green-800">
+      Donate Us
+    </span>
+    <span className="absolute inset-0 bg-white translate-y-full rounded-full transition-all duration-500 group-hover:translate-y-0 group-hover:rounded-none z-0" />
+  </button>
         </div>
       </div>
     </section>

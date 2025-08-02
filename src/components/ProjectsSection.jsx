@@ -15,7 +15,7 @@ const ProjectImage = ({ src, alt, className }) => (
 const ImagePopup = ({ project, onClose }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const nextImage = () => {
+  const nextImage = () => { 
     setCurrentImageIndex((prev) =>
       prev === project.images.length - 1 ? 0 : prev + 1
     );

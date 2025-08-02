@@ -186,7 +186,7 @@ const ReviewsPage = () => {
           >
             {data.map((item, i) => (
               <SwiperSlide key={i} className="w-[300px] sm:w-[360px] flex justify-center">
-                <div className="rounded-3xl select-none overflow-hidden w-full sm:w-[360px] h-[340px] sm:h-[380px] relative bg-gradient-to-br from-zinc-800 via-zinc-900 to-black shadow-2xl group transition-all duration-300 hover:border-2 hover:border-lime-300">
+                <div className="rounded-3xl select-none overflow-hidden w-full sm:w-[360px] h-[340px] sm:h-[440px] relative bg-gradient-to-br from-zinc-800 via-zinc-900 to-black shadow-2xl group transition-all duration-300 hover:border-2 hover:border-lime-300">
                 
                   {item.type === "img" ? (
                     <img
