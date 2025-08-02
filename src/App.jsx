@@ -19,8 +19,6 @@ import ScrollToTop from "./components/ScrollToTop";
 import ContactSection from "./components/ContactSection";
 import Admin from "./components/Admin";
 import Featuredproject from "./components/Featuredproject";
-import BlogsPage from "./pages/BlogsPage";
-import SingleBlogPage from "./pages/SingleBlogPage";
 import AdminPage from "./pages/AdminPage";
 import Myblogs from "./components/myblogs";
 
@@ -75,7 +73,6 @@ const App = () => (
         <Route path="/" element={<HomePage />} />
         <Route path="/donate" element={<DonatePage />} />
         <Route path="/blogs" element={<Myblogs />} />
-        <Route path="/blogs/:id" element={<SingleBlogPage />} />
         <Route path="/bgadmin" element={<AdminPage />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="admin/projects" element={<ProjectAdmin />} />
