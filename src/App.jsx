@@ -23,7 +23,10 @@ import PrivateRoute from "./components/admin/PrivateRoute";
 // import BlogAdmin from "./components/admin/BlogAdmin";
 import Featuredproject from "./components/Featuredproject";
 // import AdminPage from "./pages/AdminPage";
-import Myblogs from "./components/myblogs";
+// import Myblogs from "./components/myblogs";
+import BlogPost from "./components/BlogPost";
+import BlogList from "./components/BlogList";
+import BlogsAdmin from "./components/BlogsAdmin";
 
 const HomePage = () => (
   <div className="mx-auto">
@@ -54,18 +57,18 @@ const HomePage = () => (
 
 const Layout = ({ children }) => {
   const location = useLocation();
-  const hideLayout =
+  const isAdminPage =
     location.pathname.toLowerCase() === "/admin" ||
-    // location.pathname.toLowerCase() === "/bgadmin" ||
+    //  location.pathname.toLowerCase() === "/bgadmin" ||
     location.pathname.toLowerCase().startsWith("/dashboard");
 
   return (
     <>
-      {!hideLayout && <Loader />}
+      {!isAdminPage && <Loader />}
       <ScrollToTop />
-      {!hideLayout && <Navbar />}
+      {!isAdminPage && <Navbar />}
       {children}
-      {!hideLayout && <Footer />}
+      {!isAdminPage && <Footer />}
     </>
   );
 };
@@ -79,6 +82,10 @@ const App = () => (
         <Route path="/donate" element={<DonatePage />} />
         {/* <Route path="/blogs" element={<Myblogs />} /> */}
         {/* <Route path="/bgadmin" element={<AdminPage />} /> */}
+
+        <Route path="/blogs" element={<BlogList />} />
+        <Route path="/blogs/:id" element={<BlogPost />} />
+
         <Route path="/admin" element={<Admin />} />
 
         {/* Protected Dashboard with nested routes */}
@@ -91,7 +98,8 @@ const App = () => (
           }
         >
           <Route path="projects" element={<ProjectAdmin />} />
-          <Route path="blogs" element={<Myblogs />} />
+          {/* <Route path="blogs" element={<Myblogs />} /> */}
+          <Route path="blogs" element={<BlogsAdmin/>} />
           {/* Add more nested routes here */}
         </Route>
       </Routes>
