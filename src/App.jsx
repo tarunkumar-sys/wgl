@@ -22,6 +22,7 @@ import Dashboard from "./components/admin/Dashboard";
 import PrivateRoute from "./components/admin/PrivateRoute";
 // import BlogAdmin from "./components/admin/BlogAdmin";
 import Featuredproject from "./components/Featuredproject";
+import FeaturedGalleryAdmin from "./components/FeaturedGalleryAdmin";
 // import AdminPage from "./pages/AdminPage";
 // import Myblogs from "./components/myblogs";
 import BlogPost from "./components/BlogPost";
@@ -100,6 +101,7 @@ const App = () => (
           <Route path="projects" element={<ProjectAdmin />} />
           {/* <Route path="blogs" element={<Myblogs />} /> */}
           <Route path="blogs" element={<BlogsAdmin/>} />
+          <Route path="featured-gallery" element={<FeaturedGalleryAdmin />} />
           {/* Add more nested routes here */}
         </Route>
       </Routes>
