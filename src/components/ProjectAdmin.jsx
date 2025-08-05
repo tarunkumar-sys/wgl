@@ -9,30 +9,12 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
+import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { db } from "../api/firebase";
 
-// Default projects with placeholder image URLs instead of base64
-const initialProjects = [
-  {
-    id: uuidv4(),
-    title: "Tree Planting Initiative",
-    status: "Ongoing",
-    description: "Planting trees in rural schools",
-    progress: 75,
-    type: "forest",
-    img: "/images/img1.webp",
-    images: ["/images/img1.webp", "/images/img2.jpg"],
-  },
-  {
-    id: uuidv4(),
-    title: "Pond Restoration",
-    status: "Completed",
-    description: "Restoring local ponds",
-    progress: 100,
-    type: "water",
-    img: "/images/img3.jpg",
-    images: ["/images/img3.jpg", "/images/img1.webp"],
-  },
-];
+// Cloudinary configuration
+const cloudName = "dnvinnnku"; // Replace with your Cloudinary cloud name
+const uploadPreset = "wgl_website"; // Replace with your upload preset
 
 const ProjectAdmin = () => {
   const [projects, setProjects] = useState([]);
@@ -48,123 +30,213 @@ const ProjectAdmin = () => {
     images: [],
   });
   const [imageError, setImageError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Load projects from localStorage on component mount
+  // Load projects from Firestore
   useEffect(() => {
-    try {
-      const savedProjects = localStorage.getItem("projects");
-      if (savedProjects) {
-        setProjects(JSON.parse(savedProjects));
-      } else {
-        setProjects(initialProjects);
-        localStorage.setItem("projects", JSON.stringify(initialProjects));
-      }
-    } catch (error) {
-      console.error("Error loading projects:", error);
-      setProjects(initialProjects);
-    }
-  }, []);
-
-  // Save projects to localStorage when they change
-  useEffect(() => {
-    try {
-      if (projects.length > 0) {
-        localStorage.setItem("projects", JSON.stringify(projects));
-      }
-    } catch (error) {
-      console.error("Error saving projects:", error);
-      // Handle storage quota exceeded
-      if (error.name === "QuotaExceededError") {
-        alert(
-          "Storage limit exceeded. Please reduce the number or size of images."
-        );
-      }
-    }
-  }, [projects]);
-
-  const handleImageUpload = async (e, isMainImage = false) => {
-    const files = Array.from(e.target.files);
-
-    // ✅ Convert each selected image to Base64
-    const base64Images = await Promise.all(
-      files.map((file) => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = (error) => reject(error);
+    const fetchProjects = async () => {
+      setLoading(true);
+      try {
+        const querySnapshot = await getDocs(collection(db, "projects"));
+        const projectsData = [];
+        querySnapshot.forEach((doc) => {
+          projectsData.push({ id: doc.id, ...doc.data() });
         });
-      })
-    );
-
-    if (selectedProject) {
-      if (isMainImage) {
-        setSelectedProject({
-          ...selectedProject,
-          img: base64Images[0] || selectedProject.img,
-        });
-      } else {
-        setSelectedProject({
-          ...selectedProject,
-          images: [...selectedProject.images, ...base64Images],
-        });
+        setProjects(projectsData);
+      } catch (error) {
+        console.error("Error loading projects:", error);
+      } finally {
+        setLoading(false);
       }
-    } else {
-      if (isMainImage) {
-        setNewProject({
-          ...newProject,
-          img: base64Images[0] || newProject.img,
-        });
-      } else {
-        setNewProject({
-          ...newProject,
-          images: [...newProject.images, ...base64Images],
-        });
-      }
-    }
-  };
-
-  const addProject = () => {
-    if (!newProject.title || !newProject.img) return;
-
-    const projectWithId = {
-      ...newProject,
-      id: uuidv4(),
-      images:
-        newProject.images.length > 0 ? newProject.images : [newProject.img],
     };
 
-    setProjects([...projects, projectWithId]);
-    setShowAddForm(false);
-    setNewProject({
-      title: "",
-      description: "",
-      status: "Planned",
-      progress: 0,
-      type: "forest",
-      img: "",
-      images: [],
-    });
-  };
+    fetchProjects();
+  }, []);
 
-  const updateProject = () => {
-    if (!selectedProject) return;
-    setProjects(
-      projects.map((p) => (p.id === selectedProject.id ? selectedProject : p))
-    );
-    setSelectedProject(null);
-  };
+  // Upload image to Cloudinary
+  const uploadImageToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", uploadPreset);
 
-  const deleteProject = () => {
-    if (!selectedProject) return;
-    if (window.confirm("Are you sure you want to delete this project?")) {
-      setProjects(projects.filter((p) => p.id !== selectedProject.id));
-      setSelectedProject(null);
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      return data.secure_url;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error;
     }
+  };
+
+  // Handle image upload
+  const handleImageUpload = async (e, isMainImage = false) => {
+    const files = Array.from(e.target.files);
+    
+    if (files.length === 0) return;
+
+    try {
+      setLoading(true);
+      setImageError(false);
+      
+      // Upload all images to Cloudinary
+      const uploadedUrls = await Promise.all(
+        files.map(file => uploadImageToCloudinary(file))
+      );
+
+      if (selectedProject) {
+        if (isMainImage) {
+          setSelectedProject({
+            ...selectedProject,
+            img: uploadedUrls[0] || selectedProject.img,
+          });
+        } else {
+          setSelectedProject({
+            ...selectedProject,
+            images: [...selectedProject.images, ...uploadedUrls],
+          });
+        }
+      } else {
+        if (isMainImage) {
+          setNewProject({
+            ...newProject,
+            img: uploadedUrls[0] || newProject.img,
+          });
+        } else {
+          setNewProject({
+            ...newProject,
+            images: [...newProject.images, ...uploadedUrls],
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error handling image upload:", error);
+      setImageError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Add project to Firestore
+  const addProject = async () => {
+    if (!newProject.title || !newProject.img) {
+      alert("Title and main image are required");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const projectToAdd = {
+        ...newProject,
+        images: newProject.images.length > 0 ? newProject.images : [newProject.img],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      // Add to Firestore
+      const docRef = await addDoc(collection(db, "projects"), projectToAdd);
+      
+      // Update local state
+      setProjects([...projects, { ...projectToAdd, id: docRef.id }]);
+      setShowAddForm(false);
+      setNewProject({
+        title: "",
+        description: "",
+        status: "Planned",
+        progress: 0,
+        type: "forest",
+        img: "",
+        images: [],
+      });
+    } catch (error) {
+      console.error("Error adding project:", error);
+      alert("Failed to add project. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Update project in Firestore
+  const updateProject = async () => {
+    if (!selectedProject) return;
+    
+    try {
+      setLoading(true);
+      const projectRef = doc(db, "projects", selectedProject.id);
+      await updateDoc(projectRef, {
+        title: selectedProject.title,
+        description: selectedProject.description,
+        status: selectedProject.status,
+        progress: selectedProject.progress,
+        type: selectedProject.type,
+        img: selectedProject.img,
+        images: selectedProject.images,
+        updatedAt: new Date().toISOString(),
+      });
+
+      // Update local state
+      setProjects(
+        projects.map((p) => (p.id === selectedProject.id ? selectedProject : p))
+      );
+      setSelectedProject(null);
+    } catch (error) {
+      console.error("Error updating project:", error);
+      alert("Failed to update project. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Delete project from Firestore
+  const deleteProject = async () => {
+    if (!selectedProject) return;
+    
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      try {
+        setLoading(true);
+        await deleteDoc(doc(db, "projects", selectedProject.id));
+        
+        // Update local state
+        setProjects(projects.filter((p) => p.id !== selectedProject.id));
+        setSelectedProject(null);
+      } catch (error) {
+        console.error("Error deleting project:", error);
+        alert("Failed to delete project. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  // Navigate through images
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      (prevIndex + 1) % (selectedProject?.images?.length || 1)
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      (prevIndex - 1 + (selectedProject?.images?.length || 1)) % 
+      (selectedProject?.images?.length || 1)
+    );
   };
 
   return (
     <div className="container mx-auto p-4">
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="text-white text-xl">Loading...</div>
+        </div>
+      )}
+
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-lime-500">Projects Admin</h1>
         <button
@@ -176,60 +248,65 @@ const ProjectAdmin = () => {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project) => (
-          <div
-            key={project.id}
-            className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700"
-          >
-            <div className="h-48 overflow-hidden relative">
-              {project.img ? (
-                <img
-                  src={project.img} // ✅ Removed `/images/`
-                  alt={project.title}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/placeholder-image.jpg";
-                  }}
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-700 flex items-center justify-center">
-                  <span className="text-gray-400">No image</span>
+      {projects.length === 0 && !loading ? (
+        <div className="text-center py-10">
+          <p className="text-gray-400">No projects found. Add your first project!</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((project) => (
+            <div
+              key={project.id}
+              className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:shadow-lg transition-shadow"
+            >
+              <div className="h-48 overflow-hidden relative">
+                {project.img ? (
+                  <img
+                    src={project.img}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/placeholder-image.jpg";
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                    <span className="text-gray-400">No image</span>
+                  </div>
+                )}
+                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-2">
+                  <h3 className="text-white font-bold">{project.title}</h3>
+                  <p className="text-gray-300 text-sm">
+                    {project.status} - {project.progress}%
+                  </p>
                 </div>
-              )}
-              <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-2">
-                <h3 className="text-white font-bold">{project.title}</h3>
-                <p className="text-gray-300 text-sm">
-                  {project.status} - {project.progress}%
-                </p>
+              </div>
+              <div className="p-4 flex justify-between">
+                <button
+                  onClick={() => {
+                    setSelectedProject(project);
+                    setCurrentImageIndex(0);
+                  }}
+                  className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => {
+                    if (window.confirm("Are you sure you want to delete this project?")) {
+                      deleteProject(project.id);
+                    }
+                  }}
+                  className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+                >
+                  Delete
+                </button>
               </div>
             </div>
-            <div className="p-4 flex justify-between">
-              <button
-                onClick={() => setSelectedProject(project)}
-                className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => {
-                  if (
-                    window.confirm(
-                      "Are you sure you want to delete this project?"
-                    )
-                  ) {
-                    setProjects(projects.filter((p) => p.id !== project.id));
-                  }
-                }}
-                className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Add Project Modal */}
       {showAddForm && (
@@ -349,6 +426,11 @@ const ProjectAdmin = () => {
                     className="hidden"
                   />
                 </label>
+                {imageError && (
+                  <p className="text-red-500 text-sm mt-1">
+                    Error uploading image. Please try again.
+                  </p>
+                )}
               </div>
 
               <div>
@@ -363,7 +445,6 @@ const ProjectAdmin = () => {
                         alt={`Preview ${i}`}
                         className="w-16 h-16 object-cover rounded shadow"
                       />
-
                       <button
                         onClick={() =>
                           setNewProject({
@@ -402,14 +483,14 @@ const ProjectAdmin = () => {
                 </button>
                 <button
                   onClick={addProject}
-                  disabled={!newProject.title || !newProject.img}
+                  disabled={!newProject.title || !newProject.img || loading}
                   className={`px-4 py-2 rounded ${
-                    !newProject.title || !newProject.img
+                    !newProject.title || !newProject.img || loading
                       ? "bg-gray-500 cursor-not-allowed"
                       : "bg-green-600 hover:bg-green-700 text-white"
                   }`}
                 >
-                  Add Project
+                  {loading ? "Adding..." : "Add Project"}
                 </button>
               </div>
             </div>
@@ -537,11 +618,7 @@ const ProjectAdmin = () => {
                     <div className="relative">
                       {selectedProject.img ? (
                         <img
-                          src={
-                            selectedProject.img.startsWith("data:image")
-                              ? selectedProject.img
-                              : `/images/${selectedProject.img}`
-                          }
+                          src={selectedProject.img}
                           alt="Main"
                           className="w-full h-48 object-contain bg-gray-700 rounded"
                           onError={(e) => {
@@ -570,30 +647,48 @@ const ProjectAdmin = () => {
                     <label className="block text-gray-300 mb-1">
                       Additional Images
                     </label>
-                    <div className="grid grid-cols-3 gap-2 mb-2">
+                    {selectedProject.images.length > 0 ? (
+                      <div className="relative mb-4">
+                        <img
+                          src={selectedProject.images[currentImageIndex]}
+                          alt={`Gallery ${currentImageIndex}`}
+                          className="w-full h-48 object-contain bg-gray-700 rounded"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "/placeholder-image.jpg";
+                          }}
+                        />
+                        {selectedProject.images.length > 1 && (
+                          <>
+                            <button
+                              onClick={prevImage}
+                              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-full"
+                            >
+                              <ChevronLeft className="w-5 h-5 text-white" />
+                            </button>
+                            <button
+                              onClick={nextImage}
+                              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-full"
+                            >
+                              <ChevronRight className="w-5 h-5 text-white" />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="w-full h-48 bg-gray-700 flex items-center justify-center rounded mb-4">
+                        <span className="text-gray-400">No additional images</span>
+                      </div>
+                    )}
+                    <div className="flex flex-wrap gap-2 mb-2">
                       {selectedProject.images.map((img, i) => (
                         <div key={i} className="relative group">
-                          {img ? (
-                            <img
-                              src={
-                                img.startsWith("data:image")
-                                  ? img
-                                  : `/images/${img}`
-                              }
-                              alt=""
-                              className="w-full h-24 object-cover rounded"
-                              onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = "/placeholder-image.jpg";
-                              }}
-                            />
-                          ) : (
-                            <div className="w-full h-24 bg-gray-700 flex items-center justify-center">
-                              <span className="text-gray-400 text-xs">
-                                No image
-                              </span>
-                            </div>
-                          )}
+                          <img
+                            src={img}
+                            alt=""
+                            className="w-16 h-16 object-cover rounded cursor-pointer"
+                            onClick={() => setCurrentImageIndex(i)}
+                          />
                           <button
                             onClick={() =>
                               setSelectedProject({
@@ -629,24 +724,33 @@ const ProjectAdmin = () => {
             <div className="p-4 border-t border-gray-700 flex justify-between">
               <button
                 onClick={deleteProject}
-                className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                disabled={loading}
+                className={`flex items-center px-4 py-2 rounded ${
+                  loading ? "bg-gray-600 cursor-not-allowed" : "bg-red-600 hover:bg-red-700 text-white"
+                }`}
               >
                 <Trash2 className="w-4 h-4 mr-1" />
-                Delete Project
+                {loading ? "Deleting..." : "Delete Project"}
               </button>
 
               <div className="space-x-3">
                 <button
                   onClick={() => setSelectedProject(null)}
-                  className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-500"
+                  disabled={loading}
+                  className={`px-4 py-2 rounded ${
+                    loading ? "bg-gray-600 cursor-not-allowed" : "bg-gray-600 hover:bg-gray-500 text-white"
+                  }`}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={updateProject}
-                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                  disabled={loading}
+                  className={`px-4 py-2 rounded ${
+                    loading ? "bg-gray-600 cursor-not-allowed" : "bg-green-600 hover:bg-green-700 text-white"
+                  }`}
                 >
-                  Save Changes
+                  {loading ? "Saving..." : "Save Changes"}
                 </button>
               </div>
             </div>
