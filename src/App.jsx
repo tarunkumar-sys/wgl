@@ -29,6 +29,10 @@ import BlogPost from "./components/BlogPost";
 import BlogList from "./components/BlogList";
 import BlogsAdmin from "./components/BlogsAdmin";
 
+import InternshipPage from "./components/ContactUs/InternshipPage";
+import VolunteerPage from "./components/ContactUs/VolunteerPage";
+import CareerPage from "./components/ContactUs/CareerPage";
+
 const HomePage = () => (
   <div className="mx-auto">
     <section id="home">
@@ -83,6 +87,10 @@ const App = () => (
         <Route path="/donate" element={<DonatePage />} />
         {/* <Route path="/blogs" element={<Myblogs />} /> */}
         {/* <Route path="/bgadmin" element={<AdminPage />} /> */}
+
+        <Route path="/internship" element={<InternshipPage />} />
+        <Route path="/volunteer" element={<VolunteerPage />} />
+        <Route path="/career" element={<CareerPage />} />
 
         <Route path="/blogs" element={<BlogList />} />
         <Route path="/blogs/:id" element={<BlogPost />} />

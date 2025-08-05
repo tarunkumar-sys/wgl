@@ -7,12 +7,14 @@ import { navItems } from "../constants";
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [impactDropdownOpen, setImpactDropdownOpen] = useState(false);
+  const [contactDropdownOpen, setContactDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleNavClick = (href) => {
     setMobileDrawerOpen(false);
     setImpactDropdownOpen(false);
+    setContactDropdownOpen(false);
 
     if (href.startsWith("#")) {
       const id = href.slice(1);
@@ -80,6 +82,49 @@ const Navbar = () => {
                         onClick={() => navigate("/more")}
                       >
                         more
+                      </button>
+                    </div>
+                  )}
+                </li>
+              ) : item.label === "Contact" ? (
+                <li key={index} className="relative cursor-pointer">
+                  <button
+                    onClick={() => setContactDropdownOpen((prev) => !prev)}
+                    className="flex items-center gap-1 text-sm xl:text-base hover:text-green-300 transition-all"
+                  >
+                    Contact
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform ${
+                        contactDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {contactDropdownOpen && (
+                    <div className="absolute -left-8 mt-2 w-48 bg-white text-gray-700 rounded-md shadow-lg py-2 z-50">
+                      <button
+                        className="block w-full text-left px-4 py-2 hover:bg-green-100"
+                        onClick={() => handleNavClick("#contact")}
+                      >
+                        Contact Us
+                      </button>
+                      <button
+                        className="block w-full text-left px-4 py-2 hover:bg-green-100"
+                        onClick={() => handleNavClick("/internship")}
+                      >
+                        Internship
+                      </button>
+                      <button
+                        className="block w-full text-left px-4 py-2 hover:bg-green-100"
+                        onClick={() => handleNavClick("/volunteer")}
+                      >
+                        Volunteer
+                      </button>
+                      <button
+                        className="block w-full text-left px-4 py-2 hover:bg-green-100"
+                        onClick={() => handleNavClick("/career")}
+                      >
+                        Career
                       </button>
                     </div>
                   )}
@@ -155,6 +200,59 @@ const Navbar = () => {
                             className="block w-full text-left px-2 py-1 hover:bg-green-600 rounded"
                           >
                             more
+                          </button>
+                        </div>
+                      )}
+                    </li>
+                  ) : item.label === "Contact" ? (
+                    <li key={index}>
+                      <button
+                        onClick={() => setContactDropdownOpen((prev) => !prev)}
+                        className="flex items-center justify-between w-full px-2 py-2 rounded-md"
+                      >
+                        Contact
+                        <ChevronDown
+                          className={`transition-transform ${
+                            contactDropdownOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                      {contactDropdownOpen && (
+                        <div className="ml-4 mt-2 space-y-2">
+                            <button
+                            onClick={() => {
+                              handleNavClick("#contact");
+                            }}
+                            className="block w-full text-left px-2 py-1 hover:bg-green-600 rounded"
+                          >
+                          Contact Us
+                          </button>
+                          <button
+                            onClick={() => {
+                              navigate("/internship");
+                              setMobileDrawerOpen(false);
+                            }}
+                            className="block w-full text-left px-2 py-1 hover:bg-green-600 rounded"
+                          >
+                            Internship
+                          </button>
+                          <button
+                            onClick={() => {
+                              navigate("/volunteer");
+                              setMobileDrawerOpen(false);
+                            }}
+                            className="block w-full text-left px-2 py-1 hover:bg-green-600 rounded"
+                          >
+                            Volunteer
+                          </button>
+                          <button
+                            onClick={() => {
+                              navigate("/career");
+                              setMobileDrawerOpen(false);
+                            }}
+                            className="block w-full text-left px-2 py-1 hover:bg-green-600 rounded"
+                          >
+                            Career
                           </button>
                         </div>
                       )}

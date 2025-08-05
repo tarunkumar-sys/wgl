@@ -24,6 +24,11 @@ const ProjectImage = ({ src, alt, className }) => (
 const ImagePopup = ({ project, onClose }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+   useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => (document.body.style.overflow = "auto");
+  }, []);
+
   const nextImage = () => { 
     setCurrentImageIndex((prev) =>
       prev === project.images.length - 1 ? 0 : prev + 1
@@ -37,10 +42,10 @@ const ImagePopup = ({ project, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50 p-3">
-      <div className="bg-neutral-900 rounded-lg w-full bg-opacity-70 max-w-5xl max-h-[95vh] overflow-hidden transition-all duration-300 flex flex-col">
+    <div className="fixed inset-0 backdrop-blur-sm bg-black/10 flex items-center justify-center z-50 p-3">
+      <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg w-full shadow-2xl max-w-6xl max-h-[95vh] overflow-hidden transition-all duration-300 flex flex-col">
         {/* Header */}
-        <div className="flex justify-between items-center p-4 border-b border-neutral-700">
+        <div className="flex justify-between items-center p-4 border-b border-white/20">
           <h3 className="text-xl font-bold text-lime-300">{project.title}</h3>
           <button
             onClick={onClose}
@@ -51,13 +56,13 @@ const ImagePopup = ({ project, onClose }) => {
         </div>
 
         {/* Main Image Display */}
-        <div className="relative bg-black flex items-center justify-center h-[500px]">
+        <div className="relative bg-white/20 backdrop-blur-md shadow-lg flex items-center justify-center h-[500px]">
           {project.images?.length > 0 ? (
             <>
               <img
                 src={project.images[currentImageIndex]}
                 alt={`Project ${currentImageIndex + 1}`}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = "/fallback.jpg";
@@ -87,7 +92,7 @@ const ImagePopup = ({ project, onClose }) => {
 
         {/* Thumbnails */}
         {project.images?.length > 1 && (
-          <div className="flex gap-2 justify-center items-center p-3 bg-neutral-800 border-t  border-neutral-700">
+          <div className="flex gap-2 justify-center items-center p-3  border-t bg-white/10 backdrop-blur-md border-white/20 overflow-x-auto custom-scrollbar">
             {project.images.map((img, idx) => (
               <button
                 key={idx}
@@ -112,6 +117,15 @@ const ImagePopup = ({ project, onClose }) => {
           </div>
         )}
       </div>
+    <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 4px;
+        }
+      `}</style>
     </div>
   );
 };
@@ -122,66 +136,90 @@ const typeColors = {
   infra: "bg-yellow-500",
 };
 
-const AllProjectsPopup = ({ projects = [], onClose, onProjectClick }) => (
-  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div className="bg-neutral-900 rounded-lg w-full max-w-7xl max-h-[90vh] overflow-hidden flex flex-col">
-      <div className="flex justify-between items-center p-4 border-b border-neutral-700">
-        <h3 className="text-2xl font-bold text-lime-300">All Projects</h3>
-        <button onClick={onClose} className="text-gray-400 hover:text-white">
-          <X className="w-6 h-6" />
-        </button>
-      </div>
+const AllProjectsPopup = ({ projects = [], onClose, onProjectClick }) => {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => (document.body.style.overflow = "auto");
+  }, []);
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-10 py-5 overflow-y-auto ">
-        {projects.map((project) => (
-          <div
-            key={project.id}
-            className="rounded-lg overflow-hidden cursor-pointer hover:scale-105 hover:shadow-xl transition-transform duration-300 ease-in-out"
-            onClick={() => onProjectClick(project)}
-          >
-            <div className="h-48 overflow-hidden">
-              <ProjectImage
-                src={project.img || "/fallback.jpg"}
-                alt={project.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="p-4 flex-grow  bg-white/10 backdrop-blur-md rounded-b-md">
-              <div>
-                <div className="flex justify-between items-start">
-                  <h3 className="font-bold text-lime-300">{project.title}</h3>
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-neutral-900 rounded-lg w-full max-w-7xl max-h-[90vh] overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="flex justify-between items-center p-4 border-b border-neutral-700">
+          <h3 className="text-2xl font-bold text-lime-300">All Projects</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-white">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
 
-                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-900 text-green-300 h-fit">
-                    {project.status}
-                  </span>
+        {/* Scrollable Projects Grid */}
+        <div className="px-10 py-5 overflow-y-auto custom-scrollbar">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[65vh] overflow-y-auto pr-2">
+            {projects.map((project) => (
+              <div
+                key={project.id}
+                className="rounded-lg overflow-hidden cursor-pointer hover:scale-105 hover:shadow-xl transition-transform duration-300 ease-in-out"
+                onClick={() => onProjectClick(project)}
+              >
+                <div className="h-48 overflow-hidden">
+                  <ProjectImage
+                    src={project.img || "/fallback.jpg"}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-4 flex-grow bg-white/10 backdrop-blur-md rounded-b-md">
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-bold text-lime-300">{project.title}</h3>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-900 text-green-300 h-fit">
+                      {project.status}
+                    </span>
+                  </div>
+                  <p className="text-gray-300 text-sm mt-2 line-clamp-2 min-h-[2.5em]">
+                    {project.description}
+                  </p>
+                  <div className="mt-4">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-xs text-gray-400">Progress</span>
+                      <span className="text-xs font-medium text-white">
+                        {project.progress}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-1.5">
+                      <div
+                        className={`h-1.5 rounded-full ${
+                          typeColors[project.type] || "bg-gray-500"
+                        }`}
+                        style={{ width: `${project.progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <p className="text-gray-300 text-sm mt-2 line-clamp-2 min-h-[2.5em]">
-                {project.description}
-              </p>
-              <div className="mt-4">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs text-gray-400">Progress</span>
-                  <span className="text-xs font-medium text-white">
-                    {project.progress}%
-                  </span>
-                </div>
-                <div className="w-full bg-gray-700 rounded-full h-1.5">
-                  <div
-                    className={`h-1.5 rounded-full ${
-                      typeColors[project.type] || "bg-gray-500"
-                    }`}
-                    style={{ width: `${project.progress}%` }}
-                  ></div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {/* Scrollbar Styling */}
+        <style jsx>{`
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+          }
+          .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+          }
+        `}</style>
       </div>
     </div>
-  </div>
-);
+  );
+};
+
 
 const ProjectsSection = () => {
   const [projects, setProjects] = useState([]);

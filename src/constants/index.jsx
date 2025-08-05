@@ -12,7 +12,13 @@ export const navItems = [
   },
   { label: "Our Team", href: "#team" },
   { label: "Reviews", href: "#reviews" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "#contact",
+     subMenu: [
+      { label: "Internship", href: "/internship" },
+      { label: "Volunteer", href: "/volunteer" },
+      { label: "Career", href: "/career" },
+    ],
+  },
 ];
 
 
