@@ -1,7 +1,7 @@
 
 import bgImage from "/images/img4.avif";
 
-import bgVideo from "/videos/riverraft2.mp4"
+// import bgVideo from "/videos/riverraft2.mp4"
 // import bgVideo from "../assets/earth.mp4";
 // import waves from "../assets/waves.mp4"
 // import forest from "../assets/forest.mp4"
@@ -26,7 +26,7 @@ const HomeSection = () => {
       {useVideo ? (
         <video
           className="absolute top-0 left-0 w-full h-full object-cover z-0"
-          src={bgVideo}
+          src="/videos/riverraft2.mp4"
           autoPlay
           loop
           muted
