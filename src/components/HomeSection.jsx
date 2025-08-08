@@ -26,7 +26,7 @@ const HomeSection = () => {
       {useVideo ? (
         <video
           className="absolute top-0 left-0 w-full h-full object-cover z-0"
-          src="/videos/test.mp4"
+          src="https://res.cloudinary.com/dpsbx8enu/video/upload/v1754653988/riverraft2_lv90sh.mp4"
           autoPlay
           loop
           muted
