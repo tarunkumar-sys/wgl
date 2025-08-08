@@ -23,6 +23,7 @@ const ProjectImage = ({ src, alt, className }) => (
 
 const ImagePopup = ({ project, onClose }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
    useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -33,13 +34,17 @@ const ImagePopup = ({ project, onClose }) => {
     setCurrentImageIndex((prev) =>
       prev === project.images.length - 1 ? 0 : prev + 1
     );
+    setShowFullDescription(false);
   };
 
   const prevImage = () => {
     setCurrentImageIndex((prev) =>
       prev === 0 ? project.images.length - 1 : prev - 1
     );
+    setShowFullDescription(false);
   };
+
+  const needsTruncation = project.description?.length > 150;
 
   return (
     <div className="fixed inset-0 backdrop-blur-sm bg-black/10 flex items-center justify-center z-50 p-3">
@@ -68,6 +73,30 @@ const ImagePopup = ({ project, onClose }) => {
                   e.target.src = "/fallback.jpg";
                 }}
               />
+               {/* YouTube-style Description */}
+              {project.description && (
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 pt-6">
+                  <p className="text-white text-sm">
+                    {showFullDescription
+                      ? project.description
+                      : project.description.length > 290
+                      ? project.description.slice(0, 290) + "..."
+                      : project.description}
+                    {needsTruncation && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowFullDescription(!showFullDescription);
+                        }}
+                        className="text-lime-400 hover:text-lime-300 font-medium ml-2"
+                      >
+                        {showFullDescription ? "Show less" : "Show more"}
+                      </button>
+                    )}
+                  </p>
+                </div>
+              )}
+
               {project.images.length > 1 && (
                 <>
                   <button
@@ -96,7 +125,10 @@ const ImagePopup = ({ project, onClose }) => {
             {project.images.map((img, idx) => (
               <button
                 key={idx}
-                onClick={() => setCurrentImageIndex(idx)}
+                onClick={() => {
+                  setCurrentImageIndex(idx);
+                  setShowFullDescription(false);
+                }}
                 className={`w-20 h-14 rounded-md overflow-hidden border-2 ${
                   currentImageIndex === idx
                     ? "border-lime-400"
@@ -124,6 +156,13 @@ const ImagePopup = ({ project, onClose }) => {
         .custom-scrollbar::-webkit-scrollbar-thumb {
           background: rgba(255, 255, 255, 0.3);
           border-radius: 4px;
+        }
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          padding-right: 60px; /* Space for "Show more" button */
         }
       `}</style>
     </div>
