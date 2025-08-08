@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Grid, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../api/firebase";
+import { useSwipeable } from 'react-swipeable';
 
 const ProjectImage = ({ src, alt, className }) => (
   <div className={`${className} bg-gray-700 flex items-center justify-center`}>
@@ -25,7 +26,7 @@ const ImagePopup = ({ project, onClose }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showFullDescription, setShowFullDescription] = useState(false);
 
-   useEffect(() => {
+  useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => (document.body.style.overflow = "auto");
   }, []);
@@ -73,7 +74,7 @@ const ImagePopup = ({ project, onClose }) => {
                   e.target.src = "/fallback.jpg";
                 }}
               />
-               {/* YouTube-style Description */}
+              {/* YouTube-style Description */}
               {project.description && (
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 pt-6">
                   <p className="text-white text-sm">
@@ -107,7 +108,7 @@ const ImagePopup = ({ project, onClose }) => {
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-opacity-100  bg-opacity-70 text-white p-3 rounded-full"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-opacity-100 bg-opacity-70 text-white p-3 rounded-full"
                   >
                     <ChevronRight className="w-8 h-8" />
                   </button>
@@ -121,7 +122,7 @@ const ImagePopup = ({ project, onClose }) => {
 
         {/* Thumbnails */}
         {project.images?.length > 1 && (
-          <div className="flex gap-2 justify-center items-center p-3  border-t bg-white/10 backdrop-blur-md border-white/20 overflow-x-auto custom-scrollbar">
+          <div className="flex gap-2 justify-center items-center p-3 border-t bg-white/10 backdrop-blur-md border-white/20 overflow-x-auto custom-scrollbar">
             {project.images.map((img, idx) => (
               <button
                 key={idx}
@@ -149,7 +150,7 @@ const ImagePopup = ({ project, onClose }) => {
           </div>
         )}
       </div>
-    <style jsx>{`
+      <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {
           height: 6px;
         }
@@ -162,7 +163,7 @@ const ImagePopup = ({ project, onClose }) => {
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
-          padding-right: 60px; /* Space for "Show more" button */
+          padding-right: 60px;
         }
       `}</style>
     </div>
@@ -259,13 +260,13 @@ const AllProjectsPopup = ({ projects = [], onClose, onProjectClick }) => {
   );
 };
 
-
 const ProjectsSection = () => {
   const [projects, setProjects] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [selectedProject, setSelectedProject] = useState(null);
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Fetch projects from Firestore
   useEffect(() => {
@@ -287,17 +288,46 @@ const ProjectsSection = () => {
     fetchProjects();
   }, []);
 
-  const visibleProjects = projects.slice(startIndex, startIndex + 3);
+  // Mobile detection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    handleResize(); // Set initial value
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const visibleProjects = isMobile
+    ? projects // show all on mobile
+    : projects.slice(startIndex, startIndex + 3); // keep 3 on desktop
 
   const nextProjects = () => {
-    setStartIndex((prev) => (prev + 1) % Math.max(1, projects.length - 2));
+    setStartIndex((prev) => {
+      if (isMobile) {
+        return (prev + 1) % projects.length;
+      }
+      return (prev + 1) % Math.max(1, projects.length - 2);
+    });
   };
 
   const prevProjects = () => {
-    setStartIndex(
-      (prev) => (prev - 1 + projects.length) % Math.max(1, projects.length - 2)
-    );
+    setStartIndex((prev) => {
+      if (isMobile) {
+        return (prev - 1 + projects.length) % projects.length;
+      }
+      return (prev - 1 + Math.max(1, projects.length - 2)) % Math.max(1, projects.length - 2);
+    });
   };
+
+  // Add swipe handlers for mobile
+  const handlers = useSwipeable({
+    onSwipedLeft: () => nextProjects(),
+    onSwipedRight: () => prevProjects(),
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true
+  });
 
   if (loading) {
     return (
@@ -333,16 +363,28 @@ const ProjectsSection = () => {
               <button
                 onClick={prevProjects}
                 disabled={projects.length <= 3}
-                className="absolute -left-6 top-1/2 transform -translate-y-1/2 z-10 bg-green-700 hover:bg-green-600 p-2 rounded-full transition-all duration-200 hover:scale-110"
+                className="hidden md:block absolute -left-6 top-1/2 transform -translate-y-1/2 z-10 bg-green-700 hover:bg-green-600 p-2 rounded-full transition-all duration-200 hover:scale-110"
               >
                 <ChevronLeft className="w-7 h-7 text-white" />
               </button>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-10">
+              <div 
+                {...handlers}
+                className={`
+                  ${isMobile 
+                    ? "flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-6 px-4" 
+                    : "grid grid-cols-3 gap-6 px-10"
+                  }
+                `}
+              >
                 {visibleProjects.map((project) => (
                   <div
                     key={project.id}
-                    className="bg-green-900 rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+                    className={`
+                      ${isMobile ? "flex-shrink-0 w-[85vw] snap-center" : ""}
+                      bg-green-900 rounded-lg overflow-hidden cursor-pointer 
+                      hover:scale-105 transition-transform
+                    `}
                     onClick={() => setSelectedProject(project)}
                   >
                     <div className="w-full h-48 overflow-hidden">
@@ -368,7 +410,7 @@ const ProjectsSection = () => {
                           </span>
                         </div>
 
-                        <p className="text-gray-300 text-sm  line-clamp-2 min-h-[2.5em]">
+                        <p className="text-gray-300 text-sm line-clamp-2 min-h-[2.5em]">
                           {project.description}
                         </p>
                       </div>
@@ -397,13 +439,25 @@ const ProjectsSection = () => {
               <button
                 onClick={nextProjects}
                 disabled={projects.length <= 3}
-                className="absolute -right-6 top-1/2 transform -translate-y-1/2 z-10 bg-green-700 hover:bg-green-600 p-2 rounded-full transition-all duration-200 hover:scale-110"
+                className="hidden md:block absolute -right-6 top-1/2 transform -translate-y-1/2 z-10 bg-green-700 hover:bg-green-600 p-2 rounded-full transition-all duration-200 hover:scale-110"
               >
                 <ChevronRight className="w-7 h-7 text-white" />
               </button>
             </div>
 
-            <div className="text-right mt-6 mr-10">
+            {/* Mobile indicators (dots) */}
+            <div className="md:hidden flex justify-center gap-2 mt-4">
+              {projects.map((_, idx) => (
+                <div
+                  key={idx}
+                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                    startIndex === idx ? "bg-lime-400" : "bg-gray-500"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <div className="text-right mt-6 mr-10 hidden md:block">
               <button
                 onClick={() => setShowAllProjects(true)}
                 className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -432,6 +486,22 @@ const ProjectsSection = () => {
           />
         )}
       </div>
+
+      <style jsx>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .snap-x {
+          scroll-snap-type: x mandatory;
+        }
+        .snap-center {
+          scroll-snap-align: center;
+        }
+      `}</style>
     </section>
   );
 };
