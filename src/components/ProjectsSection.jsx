@@ -49,7 +49,7 @@ const ImagePopup = ({ project, onClose }) => {
 
   return (
     <div className="fixed inset-0 backdrop-blur-sm bg-black/10 flex items-center justify-center z-50 p-3">
-      <div className="bg-neutral-900 backdrop-blur border border-white/40 rounded-lg w-full shadow-2xl max-w-6xl lg:max-h-[95vh] max-h-[50vh] overflow-hidden transition-all duration-300 flex flex-col">
+      <div className="bg-neutral-900  border border-white/40 rounded-lg w-full shadow-2xl max-w-6xl lg:max-h-[95vh] max-h-[50vh] overflow-hidden transition-all duration-300 flex flex-col">
         {/* Header */}
         <div className="flex justify-between items-center p-2 sm:p-4 border-b border-white/20">
           <h3 className="text-xl font-bold text-lime-300">{project.title}</h3>
@@ -74,24 +74,23 @@ const ImagePopup = ({ project, onClose }) => {
                   e.target.src = "/fallback.jpg";
                 }}
               />
-              {/* YouTube-style Description */}
               {project.description && (
                 <div
-                  className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-2 sm:p-4 sm:pt-6 ${
-                    showFullDescription ? "max-h-[15vh] overflow-y-auto" : ""
+                  className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-black/15 p-2 sm:p-4 ${
+                    showFullDescription
+                      ? "max-h-[15vh] overflow-y-auto sm:max-h-none sm:overflow-y-visible"
+                      : ""
                   }`}
                 >
                   <p className="text-white sm:text-sm text-xs text-justify">
                     {showFullDescription
                       ? project.description
                       : (() => {
-                          // Mobile: Show first 80-100 words
                           if (window.innerWidth < 640) {
                             const words = project.description.split(" ");
                             const truncated = words.slice(0, 20).join(" ");
                             return truncated + (words.length > 20 ? "..." : "");
                           }
-                          // Desktop: Show first 280 characters
                           return project.description.length > 280
                             ? project.description.slice(0, 280) + "..."
                             : project.description;
@@ -115,13 +114,13 @@ const ImagePopup = ({ project, onClose }) => {
                 <>
                   <button
                     onClick={prevImage}
-                    className="absolute left-1 sm:left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-opacity-100 bg-opacity-70 text-white sm:p-3 p-1 rounded-full"
+                    className="absolute left-1 sm:left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-opacity-100 bg-opacity-50 text-white sm:p-3 p-1 rounded-full"
                   >
                     <ChevronLeft className="sm:w-8 sm:h-8" />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-1 sm:right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-opacity-100 bg-opacity-70 text-white sm:p-3 p-1 rounded-full"
+                    className="absolute right-1 sm:right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-opacity-100 bg-opacity-50 text-white sm:p-3 p-1 rounded-full"
                   >
                     <ChevronRight className="sm:w-8 sm:h-8" />
                   </button>
@@ -135,7 +134,7 @@ const ImagePopup = ({ project, onClose }) => {
 
         {/* Thumbnails */}
         {project.images?.length > 1 && (
-          <div className="flex gap-2 justify-center items-center p-3 border-t backdrop-blur-md border-white/20 overflow-x-auto custom-scrollbar">
+          <div className="flex gap-2 justify-center items-center p-3 border-t backdrop-blur bg-black border-white/20 overflow-x-auto custom-scrollbar">
             {project.images.map((img, idx) => (
               <button
                 key={idx}
