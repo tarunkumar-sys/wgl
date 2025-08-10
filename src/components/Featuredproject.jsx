@@ -69,8 +69,8 @@ export default function FeaturedProject() {
           </p>
         </div>
 
-        <div className="h-[400px] md:h-[550px] w-full relative group">
-          <div className="w-full h-full rounded-2xl bg-black overflow-hidden shadow-2xl border-4 border-white relative">
+        <div className="h-[300px] md:h-[550px] w-full relative group">
+          <div className="w-full h-full sm:rounded-2xl rounded-xl bg-black overflow-hidden shadow-2xl border-4 border-white relative">
             {mediaItems.length > 0 ? (
               mediaItems[currentIndex]?.type === "video" ? (
                 <video
@@ -110,13 +110,13 @@ export default function FeaturedProject() {
             <>
               <button
                 onClick={prevSlide}
-                className="hidden group-hover:block absolute top-1/2 -translate-y-1/2 left-5 text-2xl rounded-full p-2 bg-black/30 text-white hover:bg-black/50 transition z-10"
+                className="hidden group-hover:block absolute top-1/2 -translate-y-1/2 sm:left-5 left-2 sm:w-12 sm:h-12 sm:text-2xl rounded-full p-2 bg-black/30 text-white hover:bg-black/50 transition z-10"
               >
                 <ChevronLeft size={30} />
               </button>
               <button
                 onClick={nextSlide}
-                className="hidden group-hover:block absolute top-1/2 -translate-y-1/2 right-5 text-2xl rounded-full p-2 bg-black/30 text-white hover:bg-black/50 transition z-10"
+                className="hidden group-hover:block absolute top-1/2 -translate-y-1/2 sm:right-5 right-2 sm:h-12 sm:w-12 sm:text-2xl rounded-full p-2 bg-black/30 text-white hover:bg-black/50 transition z-10"
               >
                 <ChevronRight size={30} />
               </button>
@@ -124,33 +124,38 @@ export default function FeaturedProject() {
           )}
 
           {/* Thumbnail Navigation */}
-          {mediaItems.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/20 rounded-xl p-2 flex gap-2 z-20">
-              {mediaItems.map((media, index) => (
-                <div
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`cursor-pointer rounded-lg overflow-hidden transition border-2 shadow-md ${
-                    currentIndex === index
-                      ? "border-green-500 scale-110"
-                      : "border-transparent opacity-60 hover:opacity-100"
-                  }`}
-                >
-                  {media.type === "image" ? (
-                    <img
-                      src={media.url}
-                      alt={`Thumbnail ${index + 1}`}
-                      className="w-14 h-14 md:w-16 md:h-16 object-cover"
-                    />
-                  ) : (
-                    <div className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-gray-800">
-                      <Video size={28} className="text-white" />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+        {/* Thumbnail Navigation */}
+{mediaItems.length > 1 && (
+  <div className="absolute bottom-4 left-0 right-0 px-4 z-20">
+    <div className="mx-auto max-w-max bg-black/20 rounded-xl p-2 overflow-x-auto no-scrollbar">
+      <div className="flex gap-2">
+        {mediaItems.map((media, index) => (
+          <div
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={`flex-shrink-0 cursor-pointer rounded-lg overflow-hidden transition-all duration-200 border-2 shadow-md ${
+              currentIndex === index
+                ? "border-green-500 scale-110"
+                : "border-transparent opacity-60 hover:opacity-100"
+            }`}
+          >
+            {media.type === "image" ? (
+              <img
+                src={media.url}
+                alt={`Thumbnail ${index + 1}`}
+                className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-cover"
+              />
+            ) : (
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 flex items-center justify-center bg-gray-800">
+                <Video size={28} className="text-white" />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
         </div>
       </div>
     </div>

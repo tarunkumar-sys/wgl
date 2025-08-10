@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../api/firebase";
-import { useSwipeable } from 'react-swipeable';
+import { useSwipeable } from "react-swipeable";
 
 const ProjectImage = ({ src, alt, className }) => (
   <div className={`${className} bg-gray-700 flex items-center justify-center`}>
     {src ? (
-      <img 
-        src={src} 
-        alt={alt} 
+      <img
+        src={src}
+        alt={alt}
         className="w-full h-full object-cover"
         onError={(e) => {
           e.target.onerror = null;
@@ -31,7 +31,7 @@ const ImagePopup = ({ project, onClose }) => {
     return () => (document.body.style.overflow = "auto");
   }, []);
 
-  const nextImage = () => { 
+  const nextImage = () => {
     setCurrentImageIndex((prev) =>
       prev === project.images.length - 1 ? 0 : prev + 1
     );
@@ -49,9 +49,9 @@ const ImagePopup = ({ project, onClose }) => {
 
   return (
     <div className="fixed inset-0 backdrop-blur-sm bg-black/10 flex items-center justify-center z-50 p-3">
-      <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg w-full shadow-2xl max-w-6xl max-h-[95vh] overflow-hidden transition-all duration-300 flex flex-col">
+      <div className="bg-neutral-900 backdrop-blur border border-white/40 rounded-lg w-full shadow-2xl max-w-6xl lg:max-h-[95vh] max-h-[50vh] overflow-hidden transition-all duration-300 flex flex-col">
         {/* Header */}
-        <div className="flex justify-between items-center p-4 border-b border-white/20">
+        <div className="flex justify-between items-center p-2 sm:p-4 border-b border-white/20">
           <h3 className="text-xl font-bold text-lime-300">{project.title}</h3>
           <button
             onClick={onClose}
@@ -76,13 +76,26 @@ const ImagePopup = ({ project, onClose }) => {
               />
               {/* YouTube-style Description */}
               {project.description && (
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 pt-6">
-                  <p className="text-white text-sm">
+                <div
+                  className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-2 sm:p-4 sm:pt-6 ${
+                    showFullDescription ? "max-h-[15vh] overflow-y-auto" : ""
+                  }`}
+                >
+                  <p className="text-white sm:text-sm text-xs text-justify">
                     {showFullDescription
                       ? project.description
-                      : project.description.length > 290
-                      ? project.description.slice(0, 290) + "..."
-                      : project.description}
+                      : (() => {
+                          // Mobile: Show first 80-100 words
+                          if (window.innerWidth < 640) {
+                            const words = project.description.split(" ");
+                            const truncated = words.slice(0, 20).join(" ");
+                            return truncated + (words.length > 20 ? "..." : "");
+                          }
+                          // Desktop: Show first 280 characters
+                          return project.description.length > 280
+                            ? project.description.slice(0, 280) + "..."
+                            : project.description;
+                        })()}
                     {needsTruncation && (
                       <button
                         onClick={(e) => {
@@ -102,15 +115,15 @@ const ImagePopup = ({ project, onClose }) => {
                 <>
                   <button
                     onClick={prevImage}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-opacity-100 bg-opacity-70 text-white p-3 rounded-full"
+                    className="absolute left-1 sm:left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-opacity-100 bg-opacity-70 text-white sm:p-3 p-1 rounded-full"
                   >
-                    <ChevronLeft className="w-8 h-8" />
+                    <ChevronLeft className="sm:w-8 sm:h-8" />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-opacity-100 bg-opacity-70 text-white p-3 rounded-full"
+                    className="absolute right-1 sm:right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-opacity-100 bg-opacity-70 text-white sm:p-3 p-1 rounded-full"
                   >
-                    <ChevronRight className="w-8 h-8" />
+                    <ChevronRight className="sm:w-8 sm:h-8" />
                   </button>
                 </>
               )}
@@ -122,7 +135,7 @@ const ImagePopup = ({ project, onClose }) => {
 
         {/* Thumbnails */}
         {project.images?.length > 1 && (
-          <div className="flex gap-2 justify-center items-center p-3 border-t bg-white/10 backdrop-blur-md border-white/20 overflow-x-auto custom-scrollbar">
+          <div className="flex gap-2 justify-center items-center p-3 border-t backdrop-blur-md border-white/20 overflow-x-auto custom-scrollbar">
             {project.images.map((img, idx) => (
               <button
                 key={idx}
@@ -130,7 +143,7 @@ const ImagePopup = ({ project, onClose }) => {
                   setCurrentImageIndex(idx);
                   setShowFullDescription(false);
                 }}
-                className={`w-20 h-14 rounded-md overflow-hidden border-2 ${
+                className={`sm:w-20 sm:h-14 w-14 h-10 rounded-md overflow-hidden border-2 ${
                   currentImageIndex === idx
                     ? "border-lime-400"
                     : "border-transparent"
@@ -194,45 +207,53 @@ const AllProjectsPopup = ({ projects = [], onClose, onProjectClick }) => {
         </div>
 
         {/* Scrollable Projects Grid */}
-        <div className="px-10 py-5 overflow-y-auto custom-scrollbar">
+        <div className="p-5 custom-scrollbar">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[65vh] overflow-y-auto pr-2">
             {projects.map((project) => (
               <div
                 key={project.id}
-                className="rounded-lg overflow-hidden cursor-pointer hover:scale-105 hover:shadow-xl transition-transform duration-300 ease-in-out"
+                className="rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ease-in-out relative group"
                 onClick={() => onProjectClick(project)}
               >
-                <div className="h-48 overflow-hidden">
-                  <ProjectImage
-                    src={project.img || "/fallback.jpg"}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4 flex-grow bg-white/10 backdrop-blur-md rounded-b-md">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-bold text-lime-300">{project.title}</h3>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-900 text-green-300 h-fit">
-                      {project.status}
-                    </span>
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+
+                {/* Project content */}
+                <div className="h-full flex flex-col">
+                  <div className="h-48 overflow-hidden relative">
+                    <ProjectImage
+                      src={project.img || "/fallback.jpg"}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
-                  <p className="text-gray-300 text-sm mt-2 line-clamp-2 min-h-[2.5em]">
-                    {project.description}
-                  </p>
-                  <div className="mt-4">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs text-gray-400">Progress</span>
-                      <span className="text-xs font-medium text-white">
-                        {project.progress}%
+                  <div className="p-4 flex-grow bg-white/10 backdrop-blur-md rounded-b-md border-t border-white/10">
+                    <div className="flex justify-between items-start">
+                      <h3 className="font-bold text-lime-300">
+                        {project.title}
+                      </h3>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-900 text-green-300 h-fit">
+                        {project.status}
                       </span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-1.5">
-                      <div
-                        className={`h-1.5 rounded-full ${
-                          typeColors[project.type] || "bg-gray-500"
-                        }`}
-                        style={{ width: `${project.progress}%` }}
-                      ></div>
+                    <p className="text-gray-300 text-sm mt-2 line-clamp-2 min-h-[2.5em]">
+                      {project.description}
+                    </p>
+                    <div className="mt-4">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs text-gray-400">Progress</span>
+                        <span className="text-xs font-medium text-white">
+                          {project.progress}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-700 rounded-full h-1.5">
+                        <div
+                          className={`h-1.5 rounded-full ${
+                            typeColors[project.type] || "bg-gray-500"
+                          }`}
+                          style={{ width: `${project.progress}%` }}
+                        ></div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -293,14 +314,14 @@ const ProjectsSection = () => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     handleResize(); // Set initial value
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const visibleProjects = isMobile
-    ? projects // show all on mobile
+    ? [projects[startIndex]]
     : projects.slice(startIndex, startIndex + 3); // keep 3 on desktop
 
   const nextProjects = () => {
@@ -317,7 +338,10 @@ const ProjectsSection = () => {
       if (isMobile) {
         return (prev - 1 + projects.length) % projects.length;
       }
-      return (prev - 1 + Math.max(1, projects.length - 2)) % Math.max(1, projects.length - 2);
+      return (
+        (prev - 1 + Math.max(1, projects.length - 2)) %
+        Math.max(1, projects.length - 2)
+      );
     });
   };
 
@@ -326,7 +350,7 @@ const ProjectsSection = () => {
     onSwipedLeft: () => nextProjects(),
     onSwipedRight: () => prevProjects(),
     preventDefaultTouchmoveEvent: true,
-    trackMouse: true
+    trackMouse: true,
   });
 
   if (loading) {
@@ -368,12 +392,13 @@ const ProjectsSection = () => {
                 <ChevronLeft className="w-7 h-7 text-white" />
               </button>
 
-              <div 
+              <div
                 {...handlers}
                 className={`
-                  ${isMobile 
-                    ? "flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-6 px-4" 
-                    : "grid grid-cols-3 gap-6 px-10"
+                  ${
+                    isMobile
+                      ? "flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-6 px-4"
+                      : "grid grid-cols-3 gap-6 px-10"
                   }
                 `}
               >
@@ -383,7 +408,7 @@ const ProjectsSection = () => {
                     className={`
                       ${isMobile ? "flex-shrink-0 w-[85vw] snap-center" : ""}
                       bg-green-900 rounded-lg overflow-hidden cursor-pointer 
-                      hover:scale-105 transition-transform
+                      md:hover:scale-105 transition-transform
                     `}
                     onClick={() => setSelectedProject(project)}
                   >
@@ -402,7 +427,9 @@ const ProjectsSection = () => {
                               {project.title}
                             </h3>
                             {project.tag && (
-                              <p className="text-gray-300 text-xs">{project.tag}</p>
+                              <p className="text-gray-300 text-xs">
+                                {project.tag}
+                              </p>
                             )}
                           </div>
                           <span className="inline-flex items-center px-2 py-0.5 rounded-xl text-xs font-medium bg-green-900 text-green-100 h-fit">
@@ -417,7 +444,9 @@ const ProjectsSection = () => {
 
                       <div className="mt-4">
                         <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs text-gray-400">Progress</span>
+                          <span className="text-xs text-gray-400">
+                            Progress
+                          </span>
                           <span className="text-xs font-medium text-white">
                             {project.progress}%
                           </span>
